@@ -11,7 +11,7 @@ _Hinweis: Tipp zur besseren Gestaltung der Readme https://dev.to/rohit19060/how-
 - single site und multisite kompatibel
 - Shortcodes sind abwärtskompatibel bis zur aktuellen Version von rrze-univis und fau-person (Stand 01.04.2022)
 - ist auf hohe Performance ausgelegt (KISS, durchdachtes Caching, transient und reduced to the maximum code)
-- funktioniert auch bei Störungen der API zu Campo (cache mit optionaler Ausgabe des Timestamps)
+- funktioniert auch bei Störungen der API zu Campo (Cache mit optionaler Ausgabe des Timestamps)
 
 Vorlage für Shortcode:
 |Parameter|Pflichtfeld|Wert|Default|
