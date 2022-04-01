@@ -1,3 +1,5 @@
+Hinweis: Tipp zur besseren Gestaltung der Readme https://dev.to/rohit19060/how-to-write-stunning-github-readme-md-template-provided-5b09
+
 # rrze-campo
 
 - WordPress Plugin mit Shortcode, gutenberg-ready, TinyMCE conform, Widget (Block und Classic)
@@ -17,3 +19,5 @@ Vorlage für Shortcode:
 |_Mein Parameter_|Ja|positive Ganzzahl|42|
 
  
+
+
