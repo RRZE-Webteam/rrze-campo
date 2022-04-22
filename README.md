@@ -48,6 +48,7 @@ Parameter:
 Parameter von rrze-univis können verwendet werden:
 
 |Parameter|Werte|
+|-|-|
 |**task**|siehe view| 
 |**univisid**|siehe id| 
 |**number**|siehe id| 
