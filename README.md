@@ -1,20 +1,23 @@
 # rrze-campo
 
-Darstellung von Lehrveranstaltungen und organisatorischen Daten aus Campo.
-
-(ersetzt und deaktiviert rrze-univis, d.h. bestehende Shortcodes werden von rrze-campo ausgeführt)
-
-- nutzt API zu Campo
-- Zwischenspeicher als Transients
-- verwendet PHPUnit für Tests (https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/)
-- gibt .ics aus
-- ist als Shortcode, Widget und Block verwendbar
+- Liefert aufbereitete Daten zu Lehrveranstaltungen und Mitarbeitern von Campo
+- WordPress Plugin mit Shortcode, Gutenberg-ready, TinyMCE compatible, Widget (Block und Classic)
+- Vereint die Funktionalität aller bisheriger Plugins, die UnivIS nutzen: rrze-univis, fau-person
+- Aufbau orientiert sich am MVC-Modell (vor allem Datenaufbereitung ist nur an einer Stelle und gekapselt)
+- Verwendet PHPUnit (jede Funktion ist gekapselt testbar; Test wird in Settings ein/ausgeschaltet)
+- Generiert im Fehlerfall Logs, die rrze-log nutzen kann
+- Single site und multisite kompatibel
+- Shortcodes sind abwärtskompatibel bis zur aktuellen Version von rrze-univis und fau-person (Stand 01.04.2022)
+- Ist auf hohe Performance ausgelegt (KISS, durchdachtes Caching, transient und reduced to the maximum code)
+- Funktioniert auch bei Störungen der API zu Campo (Cache mit optionaler Ausgabe des Timestamps)
+- Deaktiviert rrze-univis und fau-person, sobald diese ablösbar sind (ab V 0.3)
+- Ist als Shortcode, Widget und Block verwendbar
 
 ## Download
-GITHub-Repo: https://gitlab.rrze.fau.de/rrze-webteam/rrze-jobs
+GITHub-Repo: https://github.com/RRZE-Webteam/rrze-campo
 
 ## Autor
-RRZE-Webteam , http://www.rrze.fau.de
+RRZE-Webteam, http://www.rrze.fau.de
 
 ## Copryright
 GNU General Public License (GPL) Version 3
