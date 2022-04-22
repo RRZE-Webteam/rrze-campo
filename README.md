@@ -31,7 +31,7 @@ Parameter:
 
 |Parameter|Plichtfeld|Werte|Default|Beispiele|
 |-|-|-|-|-|
-|**view**|ja|einer der Werte: mitarbeiter-alle, mitarbeiter-einzeln, mitarbeiter-orga, mitarbeiter-telefonbuch, lehrveranstaltungen-alle, lehrveranstaltungen-einzeln, publikationen|mitarbeiter|"lehrveranstaltungen" oder "mitarbeiter-telefonbuch"|
+|**view**|ja|einer der Werte: mitarbeiter-alle, mitarbeiter-einzeln, mitarbeiter-orga, mitarbeiter-telefonbuch, lehrveranstaltungen-alle, lehrveranstaltungen-einzeln, publikationen|mitarbeiter-alle|"lehrveranstaltungen" oder "mitarbeiter-telefonbuch"|
 |**id**|nein|durch Komma getrennte Zahlen||"123, 987" oder "456"|
 |**name**|nein|durch Komma getrennt: Nachname, Vorname||"Mustermann, Manfred" oder "Musterfrau, Monika"|
 |**show**|nein|durch Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"ics, tel" oder "address"|
