@@ -32,33 +32,10 @@ Parameter:
 
 |Parameter|Plichtfeld|Werte|Default|Beispiele|
 |-|-|-|-|-|
-|**view**|ja|einer der Werte: mitarbeiter-alle, 
-mitarbeiter-einzeln, 
-mitarbeiter-orga, 
-mitarbeiter-telefonbuch, 
-lehrveranstaltungen-alle, 
-lehrveranstaltungen-einzeln, 
-publikationen|mitarbeiter|"lehrveranstaltungen" oder "mitarbeiter-telefonbuch"|
+|**view**|ja|einer der Werte: mitarbeiter-alle, mitarbeiter-einzeln, mitarbeiter-orga, mitarbeiter-telefonbuch, lehrveranstaltungen-alle, lehrveranstaltungen-einzeln, publikationen|mitarbeiter|"lehrveranstaltungen" oder "mitarbeiter-telefonbuch"|
 |**id**|nein|durch Komma getrennte Zahlen||"123, 987" oder "456"|
-|**show**|nein|durch Komma getrennte Werte: sprungmarken, 
-ics, 
-telefon, 
-mobile, 
-fax,
-url,
-address,
-office,
-call
-||"ics, tel" oder "address"|
-|**hide**|nein|mit Komma getrennte Werte: sprungmarken, 
-ics, 
-telefon, 
-mobile, 
-fax,
-url,
-address,
-office,
-call||"tel, fax" oder "office"|
+|**show**|nein|durch Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"ics, tel" oder "address"|
+|**hide**|nein|mit Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"tel, fax" oder "office"|
 |**sem**|nein|Zahl oder Jahreszahl mit Semesterkürzel||"-2" oder "1" oder "2022s"|
 |**show_jobs**|nein|durch Komma getrennte Berufsbezeichnungen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
 |**hide_jobs**|nein|durch Komma getrennte Berufsbezeichnungen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
@@ -85,5 +62,7 @@ Parameter von rrze-univis können verwendet werden:
 |**since**|siehe since| 
 |**lv_import**|fällt weg| 
 |**hstart**|siehe hstart| 
+
+
 
 
