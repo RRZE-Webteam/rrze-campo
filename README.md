@@ -11,7 +11,6 @@
 - Ist auf hohe Performance ausgelegt (KISS, durchdachtes Caching, transient und reduced to the maximum code)
 - Funktioniert auch bei Störungen der API zu Campo (Cache mit optionaler Ausgabe des Timestamps)
 - Deaktiviert rrze-univis und fau-person, sobald diese ablösbar sind (ab V 0.3)
-- Ist als Shortcode, Widget und Block verwendbar
 
 ## Download
 GITHub-Repo: https://github.com/RRZE-Webteam/rrze-campo
@@ -26,7 +25,7 @@ GNU General Public License (GPL) Version 3
 
 als Shortcode:
 
-[campo view="" id="" show="" hide=""]
+[campo view="" id/name="" show="" hide=""]
 
 Parameter:
 
