@@ -4,7 +4,7 @@
  * Plugin Name:     RRZE Campo
  * Plugin URI:      https://github.com/RRZE-Webteam/rrze-campo
  * Description:     Einbindung von Daten aus Campo
- * Version:         0.0.1
+ * Version:         0.0.2
  * Author:          RRZE-Webteam
  * Author URI:      https://blogs.fau.de/webworking/
  * License:         GNU General Public License v3
@@ -89,15 +89,14 @@ function activation()
     }
 
     // Endpoint hinzufügen
-    // add_endpoint(true);
+    add_endpoint(true);
     flush_rewrite_rules();
 }
 
-// function add_endpoint()
-// {
-//     add_rewrite_endpoint('univisid', EP_PERMALINK | EP_PAGES);
-//     add_rewrite_endpoint('lv_id', EP_PERMALINK | EP_PAGES);
-// }
+function add_endpoint()
+{
+    add_rewrite_endpoint('id', EP_PERMALINK | EP_PAGES);
+}
 
 /**
  * Wird durchgeführt, nachdem das Plugin deaktiviert wurde.

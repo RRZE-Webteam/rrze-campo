@@ -98,14 +98,14 @@ class Shortcode
         // }
 
         // merge given attributes with default ones
-        // $atts_default = array();
-        // foreach ($this->settings as $k => $v) {
-        //     if ($k != 'block') {
-        //         $atts_default[$k] = $v['default'];
-        //     }
-        // }
+        $atts_default = array();
+        foreach ($this->settings as $k => $v) {
+            if ($k != 'block') {
+                $atts_default[$k] = $v['default'];
+            }
+        }
 
-        // $this->atts = $this->normalize(shortcode_atts($atts_default, $atts));
+        $this->atts = $this->normalize(shortcode_atts($atts_default, $atts));
 
         $data = '';
         $this->campo = new CampoAPI($this->atts);

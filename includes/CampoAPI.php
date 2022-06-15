@@ -33,11 +33,9 @@ class CampoAPI
 
 
     private function getKey(){
-        $settingsOptions = get_option('rrze-settings');
-
-
-        if (!empty($settingsOptions['campo_apiKey'])){
-            return $settingsOptions['campo_apiKey'];
+        $settingsOptions = get_site_option('rrze_settings');
+        if (!empty($settingsOptions->plugins->campo_apiKey)){
+            return $settingsOptions->plugins->campo_apiKey;
         }else{
             $campoOptions = get_option('rrze-campo');
             return $campoOptions['basic_ApiKey'];
