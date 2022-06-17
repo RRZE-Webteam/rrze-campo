@@ -20,7 +20,10 @@ GNU General Public License (GPL) Version 3
 
 als Shortcode:
 
-[campo view="" id/name/lecturerID="" show="" hide=""]
+a) benutzt das Template: 
+`[campo view="" id/name/lecturerID="" show="" hide=""]`
+b) freie Formatierung:
+`[campo id="123"] <strong>$title</strong><br />Hier steht ein zusätzlicher Text<br />Bitte beachten Sie die Anmeldefrist bis zum $start_date</strong> [/campo]`
 
 Parameter:
 
@@ -30,8 +33,8 @@ Parameter:
 |**id**|nein|Die ID der Lehrveranstaltung: durch Komma getrennte Zahlen||"123, 987" oder "456"|
 |**name**|nein|Der Name des/der DozentIn: durch Komma getrennt: Nachname, Vorname||"Mustermann, Manfred" oder "Musterfrau, Monika"|
 |**lecturerID**|nein|Die ID der/des DozentIn: durch Komma getrennte Zahlen||"123, 987" oder "456"|
-|**show**|nein|durch Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"ics, tel" oder "address"|
-|**hide**|nein|mit Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"tel, fax" oder "office"|
+|**show**|nein|durch Komma getrennte Werte: accordion, accordion_courses, open, openall, jumpmarks, ics, phone, mobile, fax, url, address, office, call, alle Felder der API (2Do: eigene Tabelle mit Erklärung, was die Feldnamen enthalten und was die anderen Felder bedeuten)||"ics, tel" oder "address"|
+|**hide**|nein|siehe show|
 |**sem**|nein|Zahl oder Jahreszahl mit Semesterkürzel||"-2" oder "1" oder "2022s"|
 |**order**|nein|durch Komma getrennte Berufsbezeichnungen oder Lehrveranstaltungstypen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
 |**hstart**|nein|Zahl von 1 bis 6|2|"2" oder "4"|
