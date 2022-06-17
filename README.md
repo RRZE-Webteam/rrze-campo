@@ -1,16 +1,11 @@
 # rrze-campo
 
-- Liefert aufbereitete Daten zu Lehrveranstaltungen und Mitarbeitern von Campo
+- Liefert aufbereitete Daten zu Lehrveranstaltungen von Campo
 - WordPress Plugin mit Shortcode, Gutenberg-ready, TinyMCE compatible, Widget (Block und Classic)
-- Vereint die Funktionalität aller bisheriger Plugins, die UnivIS nutzen: rrze-univis, fau-person
-- Aufbau orientiert sich am MVC-Modell (vor allem Datenaufbereitung ist nur an einer Stelle und gekapselt)
-- Verwendet PHPUnit (jede Funktion ist gekapselt testbar; Test wird in Settings ein/ausgeschaltet)
 - Generiert im Fehlerfall Logs, die rrze-log nutzen kann
 - Single site und multisite kompatibel
-- Shortcodes sind abwärtskompatibel bis zur aktuellen Version von rrze-univis und fau-person (Stand 01.04.2022)
-- Ist auf hohe Performance ausgelegt (KISS, durchdachtes Caching, transient und reduced to the maximum code)
+- Shortcodes sind abwärtskompatibel bis zur aktuellen Version von rrze-univis bei Lehrveranstaltungen
 - Funktioniert auch bei Störungen der API zu Campo (Cache mit optionaler Ausgabe des Timestamps)
-- Deaktiviert rrze-univis und fau-person, sobald diese ablösbar sind (ab V 0.3)
 
 ## Download
 GITHub-Repo: https://github.com/RRZE-Webteam/rrze-campo
@@ -25,45 +20,24 @@ GNU General Public License (GPL) Version 3
 
 als Shortcode:
 
-[campo view="" id/name="" show="" hide=""]
+a) benutzt das Template: 
+`[campo view="" id/name/lecturerID="" show="" hide=""]`
+
+b) freie Formatierung:
+`[campo id="123"] <strong>$title</strong><br />Hier steht ein zusätzlicher Text<br />Bitte beachten Sie die Anmeldefrist bis zum $start_date</strong> [/campo]`
 
 Parameter:
 
 |Parameter|Plichtfeld|Werte|Default|Beispiele|
 |-|-|-|-|-|
-|**view**|ja|einer der Werte: mitarbeiter-alle, mitarbeiter-einzeln, mitarbeiter-orga, mitarbeiter-telefonbuch, lehrveranstaltungen-alle, lehrveranstaltungen-einzeln, publikationen|mitarbeiter-alle|"lehrveranstaltungen" oder "mitarbeiter-telefonbuch"|
-|**id**|nein|durch Komma getrennte Zahlen||"123, 987" oder "456"|
-|**name**|nein|durch Komma getrennt: Nachname, Vorname||"Mustermann, Manfred" oder "Musterfrau, Monika"|
-|**show**|nein|durch Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"ics, tel" oder "address"|
-|**hide**|nein|mit Komma getrennte Werte: sprungmarken, ics, telefon, mobile, fax, url, address, office, call||"tel, fax" oder "office"|
+|**view**|ja|derzeit nur dieser Wert: lecture|
+|**id**|nein|Die ID der Lehrveranstaltung: durch Komma getrennte Zahlen||"123, 987" oder "456"|
+|**name**|nein|Der Name des/der DozentIn: durch Komma getrennt: Nachname, Vorname||"Mustermann, Manfred" oder "Musterfrau, Monika"|
+|**lecturerID**|nein|Die ID der/des DozentIn: durch Komma getrennte Zahlen||"123, 987" oder "456"|
+|**show**|nein|durch Komma getrennte Werte: accordion, accordion_courses, open, openall, jumpmarks, ics, phone, mobile, fax, url, address, office, call, alle Felder der API (2Do: eigene Tabelle mit Erklärung, was die Feldnamen enthalten und was die anderen Felder bedeuten)||"ics, tel" oder "address"|
+|**hide**|nein|siehe show|
 |**sem**|nein|Zahl oder Jahreszahl mit Semesterkürzel||"-2" oder "1" oder "2022s"|
-|**show_jobs**|nein|durch Komma getrennte Berufsbezeichnungen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
-|**hide_jobs**|nein|durch Komma getrennte Berufsbezeichnungen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
 |**order**|nein|durch Komma getrennte Berufsbezeichnungen oder Lehrveranstaltungstypen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
-|**since**|nein|Jahreszahl||"2020" oder "2022"|
 |**hstart**|nein|Zahl von 1 bis 6|2|"2" oder "4"|
-
-
-
-Parameter von rrze-univis können verwendet werden:
-
-|Parameter|Werte|
-|-|-|
-|**task**|siehe view| 
-|**univisid**|siehe id| 
-|**number**|siehe id| 
-|**id**|siehe id| 
-|**name**|siehe name| 
-|**dozent**|siehe name| 
-|**lv_id**|siehe id| 
-|**show**|siehe show| 
-|**hide**|siehe hide| 
-|**sem**|siehe hide| 
-|**order**|siehe hide| 
-|**since**|siehe since| 
-|**lv_import**|fällt weg| 
-|**hstart**|siehe hstart| 
-
-
-
+|**nodata**|nein|Eine beliebige Zeichenkette|No matching entries found.|Es wurden keine Lehrveranstaltungen gefunden.|
 
