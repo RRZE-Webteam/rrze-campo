@@ -80,24 +80,24 @@ function getFields()
 {
     return [
         'basic' => [
-            // [
-            //     'name' => 'campo_url',
-            //     'label' => __('Link zu <b>Campo</b>', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => __('', 'rrze-campo'),
-            //     'type' => 'text',
-            //     'default' => 'https://www.campo.fau.de/',
-            //     'sanitize_callback' => 'sanitize_url',
-            // ],
-            // [
-            //     'name' => 'campo_linktxt',
-            //     'label' => __('Text for the link to Campo', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => __('', 'rrze-campo'),
-            //     'type' => 'text',
-            //     'default' => __('Campo - Information System of the FAU', 'rrze-campo'),
-            //     'sanitize_callback' => 'sanitize_text_field',
-            // ],
+            [
+                'name' => 'campo_url',
+                'label' => __('Link to Campo', 'rrze-campo'),
+                'desc' => __('', 'rrze-campo'),
+                'placeholder' => __('', 'rrze-campo'),
+                'type' => 'text',
+                'default' => 'https://www.campo.fau.de/',
+                'sanitize_callback' => 'sanitize_url',
+            ],
+            [
+                'name' => 'campo_linktxt',
+                'label' => __('Text for the link to Campo', 'rrze-campo'),
+                'desc' => __('', 'rrze-campo'),
+                'placeholder' => __('', 'rrze-campo'),
+                'type' => 'text',
+                'default' => __('Campo - Information System of the FAU', 'rrze-campo'),
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
             [
                 'name' => 'ApiKey',
                 'label' => __('Campo ApiKey', 'rrze-campo'),

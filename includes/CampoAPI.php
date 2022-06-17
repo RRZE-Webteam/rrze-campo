@@ -33,12 +33,17 @@ class CampoAPI
 
 
     private function getKey(){
-        $settingsOptions = get_site_option('rrze_settings');
-        if (!empty($settingsOptions->plugins->campo_apiKey)){
-            return $settingsOptions->plugins->campo_apiKey;
-        }else{
-            $campoOptions = get_option('rrze-campo');
+        $campoOptions = get_option('rrze-campo');
+
+        if (!empty($campoOptions['basic_ApiKey'])){
             return $campoOptions['basic_ApiKey'];
+        }elseif(is_multisite()){
+            $settingsOptions = get_site_option('rrze_settings');
+            if (!empty($settingsOptions->plugins->campo_apiKey)){
+                return $settingsOptions->plugins->campo_apiKey;
+            }
+        }else{
+            return '';
         }
     }
 
@@ -55,39 +60,20 @@ class CampoAPI
                 ]
             ];
 
-        $content = wp_remote_get($this->api . $sParam, $aGetArgs);
-        $content = $content["body"];
-        $content = json_decode($content, true);
+        $apiResponse = wp_remote_get($this->api . $sParam, $aGetArgs);
 
-        // if ($content['code'] != 200) {
-        //     $aRet = [
-        //         'valid' => FALSE, 
-        //         'content' => $content['code']
-        //     ];    
-        // }else{
-        //     $aRet = [
-        //         'valid' => TRUE, 
-        //         'content' => $content
-        //     ];
-        // }
-
-        // echo '<pre>';
-        // var_dump($content);
-        // exit;
-
-
-        if (empty($content['data'])) {
+        if ($apiResponse['response']['code'] != 200){
             $aRet = [
                 'valid' => FALSE, 
-                'content' => $content['code']
+                'content' => $apiResponse['response']['code'] . ': ' . $apiResponse['response']['message']
             ];    
         }else{
+            $content = json_decode($apiResponse['body'], true);
             $aRet = [
                 'valid' => TRUE, 
-                'content' => $content
+                'content' => $content['data']
             ];
         }
-
 
         return $aRet;
     }
