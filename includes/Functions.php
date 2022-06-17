@@ -93,29 +93,29 @@ class Functions
         if ($data) {
             $ret = [];
             switch ($dataType) {
-                case 'departmentByName':
-                    foreach ($data as $entry) {
-                        if (isset($entry['orgnr'])) {
-                            $ret[$entry['orgnr']] = $entry['name'];
-                        }
-                    }
-                    break;
-                case 'personByName':
-                    foreach ($data as $entry) {
-                        if (isset($entry['person_id'])) {
-                            $ret[$entry['person_id']] = $entry['lastname'] . ', ' . $entry['firstname'];
-                        }
-                    }
-                    break;
-                case 'personAll':
-                    foreach ($data as $position => $entries) {
-                        foreach ($entries as $entry) {
-                            if (isset($entry['person_id'])) {
-                                $ret[$entry['person_id']] = $entry['lastname'] . ', ' . $entry['firstname'];
-                            }
-                        }
-                    }
-                    break;
+                // case 'departmentByName':
+                //     foreach ($data as $entry) {
+                //         if (isset($entry['orgnr'])) {
+                //             $ret[$entry['orgnr']] = $entry['name'];
+                //         }
+                //     }
+                //     break;
+                // case 'personByName':
+                //     foreach ($data as $entry) {
+                //         if (isset($entry['person_id'])) {
+                //             $ret[$entry['person_id']] = $entry['lastname'] . ', ' . $entry['firstname'];
+                //         }
+                //     }
+                //     break;
+                // case 'personAll':
+                //     foreach ($data as $position => $entries) {
+                //         foreach ($entries as $entry) {
+                //             if (isset($entry['person_id'])) {
+                //                 $ret[$entry['person_id']] = $entry['lastname'] . ', ' . $entry['firstname'];
+                //             }
+                //         }
+                //     }
+                //     break;
                 case 'lectureByName':
                     foreach ($data as $entry) {
                         if (isset($entry['lecture_id'])) {

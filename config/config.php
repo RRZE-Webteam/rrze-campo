@@ -101,6 +101,15 @@ function getFields()
             [
                 'name' => 'ApiKey',
                 'label' => __('Campo ApiKey', 'rrze-campo'),
+                'desc' => __('If you are not using a multisite installation of Wordpress, contact rrze-integration@fau.de to receive this key.', 'rrze-settings'),
+                'placeholder' => '',
+                'type' => 'text',
+                'default' => '',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            [
+                'name' => 'CampoID',
+                'label' => __('Campo ID', 'rrze-campo'),
                 'desc' => __('', 'rrze-campo'),
                 'placeholder' => '',
                 'type' => 'text',
@@ -267,8 +276,14 @@ function getShortcodeSettings()
             'hstart' => [
                 'default' => 2,
                 'field_type' => 'text',
-                'label' => __('Headline\'s size', 'fau-person'),
+                'label' => __('Headline\'s size', 'rrze-campo'),
                 'type' => 'number',
+            ],
+            'nodata' => [
+                'default' => __('No matching entries found.', 'rrze-campo'),
+                'field_type' => 'text',
+                'label' => __('Show', 'rrze-campo'),
+                'type' => 'string',
             ],
             // 'fruehstud' => [
             //     'field_type' => 'toggle',

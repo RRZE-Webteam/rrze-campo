@@ -99,7 +99,6 @@ class CampoAPI
     public function getData($dataType, $campoParam = null)
     {
         $this->campoParam = urlencode($campoParam);
-        $url = $this->getUrl($dataType) . $this->campoParam;
 
         if (!$url) {
             return 'Set Campo Org ID in settings.';
@@ -116,89 +115,6 @@ class CampoAPI
         return $data;
     }
 
-    private function getUrl($dataType)
-    {
-        $url = $this->api;
-        switch ($dataType) {
-            case 'personByID':
-                $url .= 'persons&id=';
-                break;
-            case 'personByName':
-                $url .= 'persons&fullname=';
-                break;
-            case 'personAll':
-                if (empty($this->orgID)) {
-                    return false;
-                }
-                $url .= 'departments&number=' . $this->orgID;
-                break;
-            case 'personByOrga':
-            case 'personByOrgaPhonebook':
-                if (empty($this->orgID)) {
-                    return false;
-                }
-                $url .= 'persons&department=' . $this->orgID;
-                break;
-            case 'publicationByAuthorID':
-                $url .= 'publications&authorid=';
-                break;
-            case 'publicationByAuthor':
-                $url .= 'publications&author=';
-                break;
-            case 'publicationByDepartment':
-                if (empty($this->orgID)) {
-                    return false;
-                }
-                $url .= 'publications&department=' . $this->orgID;
-                break;
-            case 'lectureByID':
-                // $url .= 'lectures'.(!empty($this->atts['lang'])?'&lang='.$this->atts['lang']:'').(isset($this->atts['lv_import']) && !$this->atts['lv_import']?'&noimports=1':'').(!empty($this->atts['type'])?'&type='.$this->atts['type']:'').(!empty($this->sem)?'&sem='.$this->sem:'').'&id=';
-                $url .= 'lectures' . (isset($this->atts['lv_import']) && !$this->atts['lv_import'] ? '&noimports=1' : '') . (!empty($this->sem) ? '&sem=' . $this->sem : '') . '&id=';
-                break;
-            case 'lectureByDepartment':
-                if (empty($this->orgID)) {
-                    return false;
-                }
-                // $url .= 'lectures'.(!empty($this->atts['fruehstud'])?'&fruehstud='.($this->atts['fruehstud']?'ja':'nein'):'').(!empty($this->atts['lang'])?'&lang='.$this->atts['lang']:'').(isset($this->atts['lv_import']) && !$this->atts['lv_import']?'&noimports=1':'').(!empty($this->atts['type'])?'&type='.$this->atts['type']:'').(!empty($this->sem)?'&sem='.$this->sem:'').'&department='.$this->orgID;
-                $url .= 'lectures' . (!empty($this->atts['fruehstud']) ? '&fruehstud=' . ($this->atts['fruehstud'] ? 'ja' : 'nein') : '') . (isset($this->atts['lv_import']) && !$this->atts['lv_import'] ? '&noimports=1' : '') . (!empty($this->sem) ? '&sem=' . $this->sem : '') . '&department=' . $this->orgID;
-                break;
-            case 'lectureByLecturer':
-                // $url .= 'lectures'.(!empty($this->atts['lang'])?'&lang='.$this->atts['lang']:'').(isset($this->atts['lv_import']) && !$this->atts['lv_import']?'&noimports=1':'').(!empty($this->atts['type'])?'&type='.$this->atts['type']:'').(!empty($this->sem)?'&sem='.$this->sem:'').'&lecturer=';
-                $url .= 'lectures' . (isset($this->atts['lv_import']) && !$this->atts['lv_import'] ? '&noimports=1' : '') . (!empty($this->sem) ? '&sem=' . $this->sem : '') . '&lecturer=';
-                break;
-            case 'lectureByLecturerID':
-                // $url .= 'lectures'.(!empty($this->atts['lang'])?'&lang='.$this->atts['lang']:'').(isset($this->atts['lv_import']) && !$this->atts['lv_import']?'&noimports=1':'').(!empty($this->atts['type'])?'&type='.$this->atts['type']:'').(!empty($this->sem)?'&sem='.$this->sem:'').'&lecturerid=';
-                $url .= 'lectures' . (isset($this->atts['lv_import']) && !$this->atts['lv_import'] ? '&noimports=1' : '') . (!empty($this->sem) ? '&sem=' . $this->sem : '') . '&lecturerid=';
-                break;
-            case 'lectureByName':
-                $url .= 'lectures&name=';
-                break;
-            case 'jobByID':
-                $url .= 'positions&closed=1&id=';
-                break;
-            case 'jobAll':
-                if (empty($this->orgID)) {
-                    return false;
-                }
-                $url .= 'positions&closed=1&department=' . $this->orgID;
-                break;
-            case 'roomByID':
-                $url .= 'rooms&id=';
-                break;
-            case 'roomByName':
-                $url .= 'rooms&name=';
-                break;
-            case 'departmentByName':
-                $url .= 'departments&name=';
-                break;
-            case 'departmentAll':
-                $url .= 'departments';
-                break;
-            default:
-                CampoAPI::log('getUrl', 'error', 'unknown dataType ' . $dataType);
-        }
-        return $url;
-    }
 
     public function getMap($dataType)
     {
@@ -708,133 +624,133 @@ class CampoAPI
     {
         $fields = [
             'title' => [
-                "Dr." => __('Doktor', 'rrze-campo'),
-                "Prof." => __('Professor', 'rrze-campo'),
-                "Dipl." => __('Diplom', 'rrze-campo'),
-                "Inf." => __('Informatik', 'rrze-campo'),
-                "Wi." => __('Wirtschaftsinformatik', 'rrze-campo'),
-                "Ma." => __('Mathematik', 'rrze-campo'),
-                "Ing." => __('Ingenieurwissenschaft', 'rrze-campo'),
-                "B.A." => __('Bakkalaureus', 'rrze-campo'),
-                "M.A." => __('Magister Artium', 'rrze-campo'),
-                "phil." => __('Geisteswissenschaft', 'rrze-campo'),
-                "pol." => __('Politikwissenschaft', 'rrze-campo'),
-                "nat." => __('Naturwissenschaft', 'rrze-campo'),
-                "soc." => __('Sozialwissenschaft', 'rrze-campo'),
-                "techn." => __('technische Wissenschaften', 'rrze-campo'),
-                "vet.med." => __('Tiermedizin', 'rrze-campo'),
-                "med.dent." => __('Zahnmedizin', 'rrze-campo'),
-                "h.c." => __('ehrenhalber', 'rrze-campo'),
-                "med." => __('Medizin', 'rrze-campo'),
-                "jur." => __('Recht', 'rrze-campo'),
+                "Dr." => __('Doctor', 'rrze-univis'),
+                "Prof." => __('Professor', 'rrze-univis'),
+                "Dipl." => __('Diploma', 'rrze-univis'),
+                "Inf." => __('Computer Science', 'rrze-univis'),
+                "Wi." => __('Business Informatics', 'rrze-univis'),
+                "Ma." => __('Math', 'rrze-univis'),
+                "Ing." => __('Engineering', 'rrze-univis'),
+                "B.A." => __('Bachelor', 'rrze-univis'),
+                "M.A." => __('Magister Artium', 'rrze-univis'),
+                "phil." => __('Humanities', 'rrze-univis'),
+                "pol." => __('Political Science', 'rrze-univis'),
+                "nat." => __('Natural Science', 'rrze-univis'),
+                "soc." => __('Social Science', 'rrze-univis'),
+                "techn." => __('Technical Sciences', 'rrze-univis'),
+                "vet.med." => __('Veterinary Medicine', 'rrze-univis'),
+                "med.dent." => __('Dentistry', 'rrze-univis'),
+                "h.c." => __('honorary', 'rrze-univis'),
+                "med." => __('medicine', 'rrze-univis'),
+                "jur." => __('law', 'rrze-univis'),
                 "rer." => "",
             ],
             'lecture_type' => [
-                "awa" => __('Anleitung zu wiss. Arbeiten (AWA)', 'rrze-campo'),
-                "ku" => __('Kurs (KU)', 'rrze-campo'),
-                "ak" => __('Aufbaukurs (AK)', 'rrze-campo'),
-                "ex" => __('Exkursion (EX)', 'rrze-campo'),
-                "gk" => __('Grundkurs (GK)', 'rrze-campo'),
-                "sem" => __('Seminar (SEM)', 'rrze-campo'),
-                "es" => __('Examensseminar (ES)', 'rrze-campo'),
-                "ts" => __('Theorieseminar (TS)', 'rrze-campo'),
-                "ag" => __('Arbeitsgemeinschaft (AG)', 'rrze-campo'),
-                "mas" => __('Masterseminar (MAS)', 'rrze-campo'),
-                "gs" => __('Grundseminar (GS)', 'rrze-campo'),
-                "us" => __('Übungsseminar (US)', 'rrze-campo'),
-                "as" => __('Aufbauseminar (AS)', 'rrze-campo'),
-                "hs" => __('Hauptseminar (HS)', 'rrze-campo'),
-                "re" => __('Repetitorium (RE)', 'rrze-campo'),
-                "kk" => __('Klausurenkurs (KK)', 'rrze-campo'),
-                "klv" => __('Klinische Visite (KLV)', 'rrze-campo'),
-                "ko" => __('Kolloquium (KO)', 'rrze-campo'),
-                "ks" => __('Kombiseminar (KS)', 'rrze-campo'),
-                "ek" => __('Einführungskurs (EK)', 'rrze-campo'),
-                "ms" => __('Mittelseminar (MS)', 'rrze-campo'),
-                "os" => __('Oberseminar (OS)', 'rrze-campo'),
-                "pr" => __('Praktikum (PR)', 'rrze-campo'),
-                "prs" => __('Praxisseminar (PRS)', 'rrze-campo'),
-                "pjs" => __('Projektseminar (PJS)', 'rrze-campo'),
-                "ps" => __('Proseminar (PS)', 'rrze-campo'),
-                "sl" => __('Sonstige Lecture (SL)', 'rrze-campo'),
-                "tut" => __('Tutorium (TUT)', 'rrze-campo'),
-                "v-ue" => __('Vorlesung mit Übung (V/UE)', 'rrze-campo'),
-                "ue" => __('Übung (UE)', 'rrze-campo'),
-                "vorl" => __('Vorlesung (VORL)', 'rrze-campo'),
-                "hvl" => __('Hauptvorlesung (HVL)', 'rrze-campo'),
-                "pf" => __('Prüfung (PF)', 'rrze-campo'),
-                "gsz" => __('Gremiensitzung (GSZ)', 'rrze-campo'),
-                "ppu" => __('Propädeutische Übung (PPU)', 'rrze-campo'),
-                "his" => __('Sprachhistorisches Seminar (HIS)', 'rrze-campo'),
-                "bsem" => __('Begleitseminar (BSEM)', 'rrze-campo'),
-                "kol" => __('Kolleg (KOL)', 'rrze-campo'),
-                "mhs" => __('MS (HS, PO 2020) (MHS)', 'rrze-campo'),
-                "pgmas" => __('PG Masterseminar (PGMAS)', 'rrze-campo'),
-                "pms" => __('PS (MS, PO 2020) (PMS)', 'rrze-campo'),
+                "awa" => __('Instructions for scientific work (AWA)', 'rrze-univis'),
+                "ku" => __('Course (KU)', 'rrze-univis'),
+                "ak" => __('Advanced course (AK)', 'rrze-univis'),
+                "ex" => __('Excursion (EX)', 'rrze-univis'),
+                "gk" => __('Basic course (GK)', 'rrze-univis'),
+                "sem" => __('Seminar (SEM)', 'rrze-univis'),
+                "es" => __('Exam seminar (ES)', 'rrze-univis'),
+                "ts" => __('Theory Seminar (TS)', 'rrze-univis'),
+                "ag" => __('Working group (AG)', 'rrze-univis'),
+                "mas" => __('Master seminar (MAS)', 'rrze-univis'),
+                "gs" => __('Basic seminar (GS)', 'rrze-univis'),
+                "us" => __('Training seminar (US)', 'rrze-univis'),
+                "as" => __('Advanced seminar (AS)', 'rrze-univis'),
+                "hs" => __('Main seminar (HS)', 'rrze-univis'),
+                "re" => __('Repetitorium (RE)', 'rrze-univis'),
+                "kk" => __('Exam course (KK)', 'rrze-univis'),
+                "klv" => __('Clinical visit (KLV)', 'rrze-univis'),
+                "ko" => __('Colloquium (KO)', 'rrze-univis'),
+                "ks" => __('Combined seminar (KS)', 'rrze-univis'),
+                "ek" => __('Introductory course (EK)', 'rrze-univis'),
+                "ms" => __('Middle seminar (MS)', 'rrze-univis'),
+                "os" => __('Upper seminar (OS)', 'rrze-univis'),
+                "pr" => __('Internship (PR)', 'rrze-univis'),
+                "prs" => __('Practice seminar (PRS)', 'rrze-univis'),
+                "pjs" => __('Project Seminar (PJS)', 'rrze-univis'),
+                "ps" => __('Pro seminar (PS)', 'rrze-univis'),
+                "sl" => __('Other courses (SL)', 'rrze-univis'),
+                "tut" => __('Tutorial (TUT)', 'rrze-univis'),
+                "v-ue" => __('Lecture with exercise (V/UE)', 'rrze-univis'),
+                "ue" => __('Exercise (UE)', 'rrze-univis'),
+                "vorl" => __('Lecture (VORL)', 'rrze-univis'),
+                "hvl" => __('Main Lecture (HVL)', 'rrze-univis'),
+                "pf" => __('Examination (PF)', 'rrze-univis'),
+                "gsz" => __('Committee meeting (GSZ)', 'rrze-univis'),
+                "ppu" => __('Propaedeutic Exercise (PPU)', 'rrze-univis'),
+                "his" => __('History of Languages Seminar (HIS)', 'rrze-univis'),
+                "bsem" => __('Accompanying seminar (BSEM)', 'rrze-univis'),
+                "kol" => __('College (KOL)', 'rrze-univis'),
+                "mhs" => __('MS (HS, PO 2020) (MHS)', 'rrze-univis'),
+                "pgmas" => __('PG Master Seminar (PGMAS)', 'rrze-univis'),
+                "pms" => __('PS (MS, PO 2020) (PMS)', 'rrze-univis'),
             ],
             'repeat' => [
                 "w1" => "",
-                "w2" => __('Jede zweite Woche', 'rrze-campo'),
-                "w3" => __('Jede dritte Woche', 'rrze-campo'),
-                "w4" => __('Jede vierte Woche', 'rrze-campo'),
+                "w2" => __('Every other week', 'rrze-univis'),
+                "w3" => __('Every third week', 'rrze-univis'),
+                "w4" => __('Every fourth week', 'rrze-univis'),
                 "w5" => "",
                 "m1" => "",
-                "s1" => __('Einzeltermin am', 'rrze-campo'),
-                "bd" => __('Blocklecture', 'rrze-campo'),
-                '0' => __(' So', 'rrze-campo'),
-                '1' => __(' Mo', 'rrze-campo'),
-                '2' => __(' Di', 'rrze-campo'),
-                '3' => __(' Mi', 'rrze-campo'),
-                '4' => __(' Do', 'rrze-campo'),
-                '5' => __(' Fr', 'rrze-campo'),
-                '6' => __(' Sa', 'rrze-campo'),
-                '7' => __(' So', 'rrze-campo'),
+                "s1" => __('single appointment on', 'rrze-univis'),
+                "bd" => __('block event', 'rrze-univis'),
+                '0' => __(' Su', 'rrze-univis'),
+                '1' => __(' Mo', 'rrze-univis'),
+                '2' => __(' Tue', 'rrze-univis'),
+                '3' => __(' Wed', 'rrze-univis'),
+                '4' => __(' Thu', 'rrze-univis'),
+                '5' => __(' Fr', 'rrze-univis'),
+                '6' => __(' Sa', 'rrze-univis'),
+                '7' => __(' Su', 'rrze-univis'),
             ],
             'publication_type' => [
-                "artmono" => __('Artikel im Sammelband', 'rrze-campo'),
-                "arttagu" => __('Artikel im Tagungsband', 'rrze-campo'),
-                "artzeit" => __('Artikel in Zeitschrift', 'rrze-campo'),
-                "techrep" => __('Interner Bericht (Technischer Bericht, Forschungsbericht)', 'rrze-campo'),
-                "hschri" => __('Hochschulschrift (Dissertation, Habilitationsschrift, Diplomarbeit etc.)', 'rrze-campo'),
-                "dissvg" => __('Hochschulschrift (auch im Verlag erschienen)', 'rrze-campo'),
-                "monogr" => __('Monographie', 'rrze-campo'),
-                "tagband" => __('Tagungsband (nicht im Verlag erschienen)', 'rrze-campo'),
-                "schutzr" => __('Schutzrecht', 'rrze-campo'),
-            ],
+                "artmono" => __('Article in anthology', 'rrze-univis'),
+                "arttagu" => __('Article in proceedings', 'rrze-univis'),
+                "artzeit" => __('Article in magazine', 'rrze-univis'),
+                "techrep" => __('Internal Report (Technical Report, Research Report)', 'rrze-univis'),
+                "hschri" => __('University thesis (dissertation, habilitation thesis, diploma thesis etc.)', 'rrze-univis'),
+                "dissvg" => __('Thesis (also published by the publisher)', 'rrze-univis'),
+                "monogr" => __('Monograph', 'rrze-univis'),
+                "tagband" => __('Conference volume (not published by the publisher)', 'rrze-univis'),
+                "schutzr" => __('IPR', 'rrze-univis'),
+                ],
             'hstype' => [
-                "diss" => __('Dissertation', 'rrze-campo'),
-                "dipl" => __('Diplomarbeit', 'rrze-campo'),
-                "mag" => __('Magisterarbeit', 'rrze-campo'),
-                "stud" => __('Studienarbeit', 'rrze-campo'),
-                "habil" => __('Habilitationsschrift', 'rrze-campo'),
-                "masth" => __('Masterarbeit', 'rrze-campo'),
-                "bacth" => __('Bachelorarbeit', 'rrze-campo'),
-                "intber" => __('Interner Bericht', 'rrze-campo'),
-                "diskus" => __('Diskussionspapier', 'rrze-campo'),
-                "discus" => __('Discussion paper', 'rrze-campo'),
-                "forber" => __('Forschungsbericht', 'rrze-campo'),
-                "absber" => __('Abschlussbericht', 'rrze-campo'),
-                "patschri" => __('Patentschrift', 'rrze-campo'),
-                "offenleg" => __('Offenlegungsschrift', 'rrze-campo'),
-                "patanmel" => __('Patentanmeldung', 'rrze-campo'),
-                "gebrmust" => __('Gebrauchsmuster', 'rrze-campo'),
-            ],
+                "diss" => __('Dissertation', 'rrze-univis'),
+                "dipl" => __('Diploma', 'rrze-univis'),
+                "mag" => __('Master\'s thesis', 'rrze-univis'),
+                "stud" => __('Study paper', 'rrze-univis'),
+                "habil" => __('Habilitation thesis', 'rrze-univis'),
+                "masth" => __('Master\'s thesis', 'rrze-univis'),
+                "bacth" => __('Bachelor thesis', 'rrze-univis'),
+                "intber" => __('Internal Report', 'rrze-univis'),
+                "diskus" => __('Discussion paper', 'rrze-univis'),
+                "discus" => __('Discussion paper', 'rrze-univis'),
+                "forber" => __('Research report', 'rrze-univis'),
+                "absber" => __('Final report', 'rrze-univis'),
+                "patschri" => __('Patent specification', 'rrze-univis'),
+                "offenleg" => __('Disclosure document', 'rrze-univis'),
+                "patanmel" => __('Patent application', 'rrze-univis'),
+                "gebrmust" => __('Utility model', 'rrze-univis'),
+                ],
             'leclanguage' => [
-                0 => __('Unterrichtssprache Deutsch', 'rrze-campo'),
-                "D" => __('Unterrichtssprache Deutsch', 'rrze-campo'),
-                "E" => __('Unterrichtssprache Englisch', 'rrze-campo'),
-            ],
-            'sws' => __(' SWS', 'rrze-campo'),
-            'schein' => __('Schein', 'rrze-campo'),
-            'ects' => __('ECTS-Studium', 'rrze-campo'),
-            'ects_cred' => __('ECTS-Credits: ', 'rrze-campo'),
-            'beginners' => __('Für Anfänger geeignet', 'rrze-campo'),
-            'fruehstud' => __('Frühstudium', 'rrze-campo'),
-            'gast' => __('Für Gasthörer zugelassen', 'rrze-campo'),
-            'evaluation' => __('Evaluation', 'rrze-campo'),
+                0 => __('Lecture\'s language German', 'rrze-univis'),
+                "D" => __('Lecture\'s language German', 'rrze-univis'),
+                "E" => __('Lecture\'s language English', 'rrze-univis'),
+                ],
+            'sws' => __(' SWS', 'rrze-univis'),
+            'schein' => __('Certificate', 'rrze-univis'),
+            'ects' => __('ECTS studies', 'rrze-univis'),
+            'ects_cred' => __('ECTS credits: ', 'rrze-univis'),
+            'beginners' => __('Suitable for beginners', 'rrze-univis'),
+            'fruehstud' => __('Early study', 'rrze-univis'),
+            'gast' => __('Allowed for guest students', 'rrze-univis'),
+            'evaluation' => __('Evaluation', 'rrze-univis'),
             'locations' => '',
             'organizational' => '',
-        ];
+            ];
 
         foreach ($data as $nr => $row) {
             foreach ($fields as $field => $values) {

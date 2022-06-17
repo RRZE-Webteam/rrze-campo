@@ -35,7 +35,7 @@ class Shortcode
     public function __construct($pluginFile, $settings)
     {
         $this->pluginFile = $pluginFile;
-        $this->settings = getShortcodeSettings();
+        // $this->settings = getShortcodeSettings();
         $this->options = get_option('rrze-campo');
         // $this->CampoOrgNr = (!empty($this->options['basic_CampoOrgNr']) ? $this->options['basic_CampoOrgNr'] : 0);
         // $this->CampoURL = (!empty($this->options['basic_campo_url']) ? $this->options['basic_campo_url'] : 'https://campo.uni-erlangen.de');
@@ -69,35 +69,9 @@ class Shortcode
      */
     public function shortcodeOutput($atts)
     {
-        $this->settings = getShortcodeSettings();
-
-        // if (empty($atts)) {
-        //     return $this->CampoLink;
-        // }
-
-        if (!empty($atts['nocache'])) {
-            $this->noCache = true;
-        }
-
-        // lv_id is not in config (=> id)
-        if (!empty($atts['lv_id'])) {
-            $atts['id'] = $atts['lv_id'];
-            if ($atts['task'] == 'lectures-all') {
-                $atts['task'] = 'lectures-single';
-            }
-        }
-
-        // get settings
-        // switch ($atts['task']) {
-        //     case 'lectures-single':
-        //     case 'lectures-all':
-                $this->settings = $this->settings['lectures'];
-        //         break;
-        //     default:
-        //         return;
-        // }
-
         // merge given attributes with default ones
+        $this->settings = getShortcodeSettings();
+        $this->settings = $this->settings['lectures'];
         $atts_default = array();
         foreach ($this->settings as $k => $v) {
             if ($k != 'block') {
@@ -107,6 +81,10 @@ class Shortcode
 
         $this->atts = $this->normalize(shortcode_atts($atts_default, $atts));
 
+        if (!empty($atts['nocache'])) {
+            $this->noCache = true;
+        }
+
         $data = '';
         $this->campo = new CampoAPI($this->atts);
 
@@ -114,32 +92,24 @@ class Shortcode
         var_dump($this->campo->getResponse());
         exit;
 
-        switch ($this->atts['task']) {
-            case 'lectures-single':
-                if (!empty($this->atts['id'])) {
-                    $data = $this->getData('lectureByID', $this->atts['id']);
-                } elseif (!empty($this->atts['name'])) {
-                    $data = $this->getData('lectureByLecturer', $this->atts['name']);
-                } elseif (!empty($this->atts['campoid'])) {
-                    $data = $this->getData('lectureByLecturerID', $this->atts['campoid']);
-                } elseif (!empty($this->atts['id'])) {
-                    $data = $this->getData('lectureByLecturerID', $this->atts['id']);
+        if (!empty($this->atts['id'])){
+            // lectureByID
+            $data = $this->getData('lectureByID', $this->atts['id']);
+        }elseif (!empty($this->atts['name'])){
+            // lectureByLecturerName
+            $data = $this->getData('lectureByLecturer', $this->atts['name']);
+        }elseif (!empty($this->atts['lecturerID'])){
+            // lectureByLecturerID
+            $data = $this->getData('lectureByLecturerID', $this->atts['lecturerID']);
+        }else{
+            // all lectures
+            if (empty($this->atts['campoID'])){
+                $campoOptions = get_option('rrze-campo');
+                if (!empty($campoOptions['basic_ApiKey'])){
+                    $this->atts['campoID'] = $campoOptions['basic_campoID'];
                 }
-                if ($data) {
-                    $lecture = $data[array_key_first($data)][0];
-                }
-                break;
-            case 'lectures-all':
-                if (!empty($this->atts['name'])) {
-                    $data = $this->getData('lectureByLecturer', $this->atts['name']);
-                } elseif (!empty($this->atts['campoid'])) {
-                    $data = $this->getData('lectureByLecturerID', $this->atts['campoid']);
-                } elseif (!empty($this->atts['id'])) {
-                    $data = $this->getData('lectureByLecturerID', $this->atts['id']);
-                } else {
-                    $data = $this->getData('lectureByDepartment');
-                }
-                break;
+            }
+            $data = $this->getData('lectureByCampoID', $this->atts['campoID']);
         }
 
         if ($data && is_array($data)) {
@@ -155,7 +125,7 @@ class Shortcode
                 return str_replace("\n", " ", ob_get_clean());
             }
         } else {
-            return __('Keine passenden Datensätze gefunden.', 'rrze-campo');
+            return $this->atts['nodata'];
         }
     }
 
@@ -442,7 +412,7 @@ class Shortcode
             return $data;
         }
         $data = get_transient(self::TRANSIENT_PREFIX . $dataType . $sAtts . $this->CampoOrgNr . $campoParam);
-        if ($data && $data != __('Keine passenden Datensätze gefunden.', 'rrze-campo')) {
+        if ($data && $data != $this->atts['nodata']) {
             return $data;
         } else {
             $data = $this->campo->getData($dataType, $campoParam);
