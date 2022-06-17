@@ -67,7 +67,7 @@ class Shortcode
      * @param  array   $atts Shortcode-Attribute
      * @return string Gib den Inhalt zurück
      */
-    public function shortcodeOutput($atts)
+    public function shortcodeOutput($atts, $content = NULL)
     {
         // merge given attributes with default ones
         $this->settings = getShortcodeSettings();
@@ -117,13 +117,23 @@ class Shortcode
             // var_dump($data);
             // exit;
 
-            $filename = trailingslashit(dirname(__FILE__)) . '../templates/' . $this->atts['task'] . '.php';
+            // is it an enclosing shortcode?
+            if (preg_match_all('(\$\w+)', $content, $matches)) {
+                foreach($data as $entry){
+                    $ret .= str_replace(array_keys($entry), array_values($entry), $content);
+                }
+                return $ret;
+            }else{
+                $filename = trailingslashit(dirname(__FILE__)) . '../templates/' . $this->atts['task'] . '.php';
 
-            if (is_file($filename)) {
-                ob_start();
-                include $filename;
-                return str_replace("\n", " ", ob_get_clean());
+                if (is_file($filename)) {
+                    ob_start();
+                    include $filename;
+                    return str_replace("\n", " ", ob_get_clean());
+                }
             }
+    
+
         } else {
             return $this->atts['nodata'];
         }
