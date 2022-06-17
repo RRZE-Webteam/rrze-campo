@@ -22,6 +22,7 @@ als Shortcode:
 
 a) benutzt das Template: 
 `[campo view="" id/name/lecturerID="" show="" hide=""]`
+
 b) freie Formatierung:
 `[campo id="123"] <strong>$title</strong><br />Hier steht ein zusätzlicher Text<br />Bitte beachten Sie die Anmeldefrist bis zum $start_date</strong> [/campo]`
 
