@@ -34,7 +34,7 @@ Parameter:
 |**id**|nein|Die ID der Lehrveranstaltung: durch Komma getrennte Zahlen||"123, 987" oder "456"|
 |**name**|nein|Der Name des/der DozentIn: durch Komma getrennt: Nachname, Vorname||"Mustermann, Manfred" oder "Musterfrau, Monika"|
 |**lecturerID**|nein|Die ID der/des DozentIn: durch Komma getrennte Zahlen||"123, 987" oder "456"|
-|**show**|nein|durch Komma getrennte Werte: accordion, accordion_courses, open, openall, jumpmarks, ics, phone, mobile, fax, url, address, office, call, alle Felder der API (2Do: eigene Tabelle mit Erklärung, was die Feldnamen enthalten und was die anderen Felder bedeuten)||"ics, tel" oder "address"|
+|**show**|nein|durch Komma getrennte Werte: accordion, med oder nat oder rw oder phil oder tk (=Farben des Akkordeons), open, openall, jumpmarks, ics, phone, mobile, fax, url, address, office, call, alle Felder der API (2Do: eigene Tabelle mit Erklärung, was die Feldnamen enthalten und was die anderen Felder bedeuten)||"ics, tel" oder "address"|
 |**hide**|nein|siehe show|
 |**sem**|nein|Zahl oder Jahreszahl mit Semesterkürzel||"-2" oder "1" oder "2022s"|
 |**order**|nein|durch Komma getrennte Berufsbezeichnungen oder Lehrveranstaltungstypen||"UnivIS-Beauftragter" oder "Webmaster, UnivIS-Beauftragter"|
