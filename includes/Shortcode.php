@@ -53,7 +53,7 @@ class Shortcode
     public function onLoaded()
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
-        add_shortcode('campo', [$this, 'shortcodeOutput'], 10, 2);
+        add_shortcode('lectures', [$this, 'shortcodeLectures'], 10, 2);
     }
 
     public function enqueueScripts()
@@ -67,7 +67,7 @@ class Shortcode
      * @param  array   $atts Shortcode-Attribute
      * @return string Gib den Inhalt zurück
      */
-    public function shortcodeOutput($atts, $content = NULL)
+    public function shortcodeLectures($atts, $content = NULL)
     {
         // merge given attributes with default ones
         $this->settings = getShortcodeSettings();

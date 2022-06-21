@@ -8,8 +8,9 @@ $aAllowedColors = [
     'tk',
 ];
 
-$aColor = array_intersect($this->show, $aAllowedColors);
-$this->atts['color'] = (!empty($aColor) ? $aColor[1] : '');
+$this->atts['color'] = implode('', array_intersect($this->show, $aAllowedColors));
+$this->atts['color_courses'] = explode('_', implode('', array_intersect($this->show, preg_filter('/$/', '_courses', $aAllowedColors))));
+$this->atts['color_courses'] = $this->atts['color_courses'][0];
 
 $ret = '<div class="rrze-campo">';
 if ($data){
@@ -20,79 +21,90 @@ if ($data){
     $wsstart = (!empty($options['basic_wsStart']) ? $options['basic_wsStart'] : 0);
     $wsend = (!empty($options['basic_wsEnd']) ? $options['basic_wsEnd'] : 0);
 
-    if (in_array('accordion', $this->show)){
+    if (in_array('accordion', $this->show) || in_array('accordion_courses', $this->show)){
         $ret .= '[collapsibles hstart="' . $this->atts['hstart'] . '"]';
     }
 
-    foreach ($data as $type => $lectures){
-
+    foreach ($data as $typ => $veranstaltungen){
         if (in_array('accordion', $this->show)){
-            $ret .= '[collapse title="' . $type . '" name="' . urlencode($type) . '" color="' . $this->atts['color'] . '"]';
+            $ret .= '[collapse title="' . $typ . '" name="' . urlencode($typ) . '" color="' . $this->atts['color'] . '"]';
         }else{
-            $ret .= '<h' . $this->atts['hstart'] . '>' . $type . '</h' . $this->atts['hstart'] . '>';
+            $ret .= '<h' . $this->atts['hstart'] . '>' . $typ . '</h' . $this->atts['hstart'] . '>';
         }
 
         $ret .= '<ul>';
-        foreach ($lectures as $lecture){
-            $url = get_permalink() . 'lv_id/' . $lecture['lecture_id'];
+        foreach ($veranstaltungen as $veranstaltung){
+            $courseDates = '';
+            $url = get_permalink() . 'lv_id/' . $veranstaltung['lecture_id'];
 			$ret .= '<li>';
             $ret .= '<h' . ($this->atts['hstart'] + 1) . '><a href="' . $url . '">';
-            if ($lang != 'de_DE' && $lang != 'de_DE_formal' && !empty($lecture['ects_name'])) {
-                $lecture['title'] = $lecture['ects_name'];
+            if ($lang != 'de_DE' && $lang != 'de_DE_formal' && !empty($veranstaltung['ects_name'])) {
+                $veranstaltung['title'] = $veranstaltung['ects_name'];
             } else {
-                $lecture['title'] = $lecture['name'];
+                $veranstaltung['title'] = $veranstaltung['name'];
             }
-            $ret .= $lecture['title'];
+            $ret .= $veranstaltung['title'];
             $ret .= '</a></h' . ($this->atts['hstart'] + 1) . '>';
-            if (!empty($lecture['comment']) && !in_array('comment', $this->hide)) {
-                $ret .= '<p>' . make_clickable($lecture['comment']) . '</p>';
+            if (!empty($veranstaltung['comment']) && !in_array('comment', $this->hide)) {
+                $ret .= '<p>' . make_clickable($veranstaltung['comment']) . '</p>';
             }
-            if (!empty($lecture['organizational']) && !in_array('organizational', $this->hide)) {
-                $ret .= '<p>' . make_clickable($lecture['organizational']) . '</p>';
+            if (!empty($veranstaltung['organizational']) && !in_array('organizational', $this->hide)) {
+                $ret .= '<p>' . make_clickable($veranstaltung['organizational']) . '</p>';
             }
 
-            $ret .= '<ul class="datemeta">';
+            $ret .= '<ul class="terminmeta">';
             $ret .= '<li>';
             $infos = '';
-            if (!empty($lecture['sws'])) {
-                $infos .= '<span>' . $lecture['sws'] . '</span>';
+            if (!empty($veranstaltung['sws'])) {
+                $infos .= '<span>' . $veranstaltung['sws'] . '</span>';
             }
-            if (!empty($lecture['maxturnout'])) {
+            if (!empty($veranstaltung['maxturnout'])) {
                 if (!empty($infos)) {$infos .= '; ';}
-                $infos .= '<span>' . __('Expected participants', 'rrze-campo') . ': ' . $lecture['maxturnout'] . '</span>';
+                $infos .= '<span>' . __('Expected participants', 'rrze-campo') . ': ' . $veranstaltung['maxturnout'] . '</span>';
             }
-            if (!empty($lecture['fruehstud'])) {
+            if (!empty($veranstaltung['fruehstud'])) {
                 if (!empty($infos)) {$infos .= '; ';}
-                $infos .= '<span>' . $lecture['fruehstud'] . '</span>';
+                $infos .= '<span>' . $veranstaltung['fruehstud'] . '</span>';
             }
-            if (!empty($lecture['gast'])) {
+            if (!empty($veranstaltung['gast'])) {
                 if (!empty($infos)) {$infos .= '; ';}
-                $infos .= '<span>' . $lecture['gast'] . '</span>';
+                $infos .= '<span>' . $veranstaltung['gast'] . '</span>';
             }
-            if (!empty($lecture['schein'])) {
+            if (!empty($veranstaltung['schein'])) {
                 if (!empty($infos)) {$infos .= '; ';}
-                $infos .= '<span>' . $lecture['schein'] . '</span>';
+                $infos .= '<span>' . $veranstaltung['schein'] . '</span>';
             }
-            if (!empty($lecture['ects'])) {
+            if (!empty($veranstaltung['ects'])) {
                 if (!empty($infos)) {$infos .= '; ';}
-                $infos .= '<span>' . $lecture['ects'] . '</span>';
-                if (!empty($lecture['ects_cred'])) {
-                    $infos .= ' (' . $lecture['ects_cred'] . ')';
+                $infos .= '<span>' . $veranstaltung['ects'] . '</span>';
+                if (!empty($veranstaltung['ects_cred'])) {
+                    $infos .= ' (' . $veranstaltung['ects_cred'] . ')';
                 }
                 $infos .= '</span>';
             }
-            if (!empty($lecture['leclanguage_long']) && ($lecture['leclanguage_long'] != __('Lecture\'s language German', 'rrze-campo'))) {
+            if (!empty($veranstaltung['leclanguage_long']) && ($veranstaltung['leclanguage_long'] != __('Lecture\'s language German', 'rrze-campo'))) {
                 if (!empty($infos)) {$infos .= ', ';}
-                $infos .= '<span>' . $lecture['leclanguage_long'] . '</span>';
+                $infos .= '<span>' . $veranstaltung['leclanguage_long'] . '</span>';
             }
             $ret .= $infos . '</li>';
 
-			$courseDates = '<li class="termindaten">' . __('Date', 'rrze-campo') . ':';
-			$courseDates .= '<ul>';
+            if (in_array('accordion_courses', $this->show)){
+                if (in_array('accordion', $this->show)){
+                    if (empty($courseDates)){
+                        $courseDates = '[accordion hstart="' . ($this->atts['hstart'] + 1) . '"]';
+                    }
+                    $courseDates .= '[accordion-item title="' . __('Date', 'rrze-campo') . '" name="' . __('Date', 'rrze-campo') . '_' . urlencode($veranstaltung['title']) . '" color="' . $this->atts['color_courses'] . '"]';
+                }else{
+                    $courseDates = '[collapse title="' . __('Date', 'rrze-campo') . '" name="' . __('Date', 'rrze-campo') . '_' . urlencode($veranstaltung['title']) . '" color="' . $this->atts['color_courses'] . '"]';
+                }
+            }else{
+                $courseDates = '<li class="termindaten">' . __('Date', 'rrze-campo') . ':';
+            }
+            $courseDates .= '<ul>';
 
-            if (isset($lecture['courses'])){
-                foreach ($lecture['courses'] as $course){
-                    if ((empty($lecture['lecturer_key']) || empty($course['doz'])) || (!empty($lecture['lecturer_key']) && !empty($course['doz']) && (in_array($lecture['lecturer_key'], $course['doz'])))) {
+            if (isset($veranstaltung['courses'])){
+                foreach ($veranstaltung['courses'] as $course){
+                    if ((empty($veranstaltung['lecturer_key']) || empty($course['doz'])) || (!empty($veranstaltung['lecturer_key']) && !empty($course['doz']) && (in_array($veranstaltung['lecturer_key'], $course['doz'])))) {
                         foreach ($course['term'] as $term){
                             $t = array();
                             $time = array();
@@ -129,17 +141,17 @@ if ($data){
                             // ICS
                             if (in_array('ics', $this->show) && !in_array('ics', $this->hide)) {
                                 $props = [
-                                    'summary' => $lecture['title'],
+                                    'summary' => $veranstaltung['title'],
                                     'startdate' => (!empty($term['startdate']) ? $term['startdate'] : null),
                                     'enddate' => (!empty($term['enddate']) ? $term['enddate'] : null),
                                     'starttime' => (!empty($term['starttime']) ? $term['starttime'] : null),
                                     'endtime' => (!empty($term['endtime']) ? $term['endtime'] : null),
                                     'repeat' => (!empty($term['repeat']) ? $term['repeat'] : null),
                                     'location' => (!empty($t['room']) ? $t['room'] : null),
-                                    'description' => (!empty($lecture['comment']) ? $lecture['comment'] : null),
+                                    'description' => (!empty($veranstaltung['comment']) ? $veranstaltung['comment'] : null),
                                     'url' => get_permalink(),
                                     'map' => (!empty($term['room']['north']) && !empty($term['room']['east']) ? 'https://karte.fau.de/api/v1/iframe/marker/' . $term['room']['north'] . ',' . $term['room']['east'] . '/zoom/16' : ''),
-                                    'filename' => sanitize_file_name($type),
+                                    'filename' => sanitize_file_name($typ),
                                     'ssstart' => $ssstart,
                                     'ssend' => $ssend,
                                     'wsstart' => $wsstart,
@@ -151,12 +163,28 @@ if ($data){
                             }
                             $t['time'] .= ',';
                             $term_formatted = implode(' ', $t);
-						    $courseDates .= '<li>' . $term_formatted . '</li>';
+                            $courseDates .= '<li>' . $term_formatted . '</li>';
                         }
                     }
                 }
+                if (in_array('accordion_courses', $this->show)){
+                    if (in_array('accordion', $this->show)){
+                        $courseDates .= '[/accordion-item]';
+                        $courseDates .= '[/accordion]';
+                    }else{
+                        $courseDates .= '[/collapse]';
+                    }
+                }
             }else{
-			    $courseDates .= '<li>' . __('Time and place on appointment', 'rrze-campo') . '</li>';
+                $courseDates .= '<li>' . __('Time and place on appointment', 'rrze-campo') . '</li>';
+                if (in_array('accordion_courses', $this->show)){
+                    if (in_array('accordion', $this->show)){
+                        $courseDates .= '[/accordion-item]';
+                        $courseDates .= '[/accordion]';
+                    }else{
+                        $courseDates .= '[/collapse]';
+                    }
+                }
             }
 		    $courseDates .= '</ul>';
 		    $courseDates .= '</li>';
@@ -169,7 +197,7 @@ if ($data){
         }
     }
 
-    if (in_array('accordion', $this->show)){
+    if (in_array('accordion', $this->show) || in_array('accordion_courses', $this->show)){
         $ret .= '[/collapsibles]';
         $ret = do_shortcode($ret);
     }
