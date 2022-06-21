@@ -225,7 +225,7 @@ function getShortcodeSettings()
             'type' => [
                 'default' => '',
                 'field_type' => 'text',
-                'label' => __('Typ. z.B. vorl (=Vorlesung)', 'rrze-campo'),
+                'label' => __('Type f.e. vorl (=Vorlesung)', 'rrze-campo'),
                 'type' => 'string',
             ],
             'order' => [

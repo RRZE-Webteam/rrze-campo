@@ -28,7 +28,7 @@ class CampoAPI
         // $this->orgID = $orgID;
         $this->atts = $atts;
         $this->sem = (!empty($this->atts['sem']) && self::checkSemester($this->atts['sem']) ? $this->atts['sem'] : '');
-        $this->gast = (!empty($this->atts['gast']) ? __('Für Gasthörer zugelassen', 'rrze-campo') : '');
+        $this->gast = (!empty($this->atts['gast']) ? __('Allowed for guest students', 'rrze-univis') : '');
     }
 
 

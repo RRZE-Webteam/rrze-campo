@@ -76,7 +76,7 @@ class Functions
     public function getCampoData($campoOrgID = null, $dataType = '', $keyword = null)
     {
         $data = false;
-        $ret = __('Keine passenden Einträge gefunden.', 'rrze-campo');
+        $ret = __('No matching entries found.', 'rrze-campo');
 
         $options = get_option('rrze-campo');
         $data = 0;
@@ -87,7 +87,7 @@ class Functions
             $campo = new CampoAPI($CampoURL, $campoOrgID, null);
             $data = $campo->getData($dataType, $keyword);
         } elseif (!$CampoURL) {
-            $ret = __('Link zu Campo fehlt.', 'rrze-campo');
+            $ret = __('Link to Campo is missing.', 'rrze-campo');
         }
 
         if ($data) {

@@ -1,6 +1,6 @@
 {
   "name": "rrze-campo",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Einbindung von Lectures aus Campo",
   "main": "rrze-campo.php",
   "textdomain": "rrze-campo",

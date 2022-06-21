@@ -236,7 +236,7 @@ class Shortcode
             'default' => '',
             'type' => 'string',
             'items' => ['type' => 'text'],
-            'values' => [['id' => '', 'val' => (empty($all) ? __('-- Alle --', 'rrze-campo') : $all)]],
+            'values' => [['id' => '', 'val' => (empty($all) ? __('-- All --', 'rrze-campo') : $all)]],
         ];
 
         foreach ($aData as $id => $name) {
@@ -307,14 +307,14 @@ class Shortcode
                 $settings['id'] = $this->makeDropdown('id', __('Lecture', 'rrze-campo'), $aLectures);
 
                 asort($aLectureTypes);
-                $settings['type'] = $this->makeDropdown('type', __('Typ', 'rrze-campo'), $aLectureTypes);
+                $settings['type'] = $this->makeDropdown('type', __('Type', 'rrze-campo'), $aLectureTypes);
 
                 asort($aLectureLanguages);
-                $settings['sprache'] = $this->makeDropdown('sprache', __('Sprache', 'rrze-campo'), $aLectureLanguages);
+                $settings['sprache'] = $this->makeDropdown('sprache', __('Language', 'rrze-campo'), $aLectureLanguages);
 
                 // Semester
                 if (isset($settings['sem'])) {
-                    $settings['sem'] = $this->makeDropdown('sem', __('Semester', 'rrze-campo'), [], __('-- Aktuelles Semester --', 'rrze-campo'));
+                    $settings['sem'] = $this->makeDropdown('sem', __('Semester', 'rrze-campo'), [], __('-- Current semester --', 'rrze-campo'));
                     $thisSeason = (in_array(date('n'), [10, 11, 12, 1]) ? 'w' : 's');
                     $season = ($thisSeason = 's' ? 'w' : 's');
                     $nextYear = date("Y") + 1;
