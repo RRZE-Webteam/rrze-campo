@@ -1,6 +1,6 @@
 <?php 
 
-echo '<div class="rrze-campo">';
+$ret = '<div class="rrze-campo">';
 
 if ($lecture){
     $lang = get_locale();
@@ -10,22 +10,22 @@ if ($lecture){
     $wsstart = (!empty($options['basic_wsStart']) ? $options['basic_wsStart'] : 0);
     $wsend = (!empty($options['basic_wsEnd']) ? $options['basic_wsEnd'] : 0);
 
-    echo '<div itemscope itemtype="https://schema.org/Course">';
+    $ret .= '<div itemscope itemtype="https://schema.org/Course">';
 
-    echo '<h' . $this->atts['hstart'] . '>';
+    $ret .= '<h' . $this->atts['hstart'] . '>';
     if ($lang != 'de_DE' && $lang != 'de_DE_formal' && !empty($lecture['ects_name'])) {
         $lecture['title'] = $lecture['ects_name'];
     } else {
         $lecture['title'] = $lecture['name'];
     }
-    echo '<span itemprop="name">' . $lecture['title'] . '</span>';
+    $ret .= '<span itemprop="name">' . $lecture['title'] . '</span>';
 
-    // echo '<span itemprop="provider" itemscope itemtype="http://schema.org/EducationalOrganization">;
+    // $ret .= '<span itemprop="provider" itemscope itemtype="http://schema.org/EducationalOrganization">;
 
-    echo '</h' . $this->atts['hstart'] . '>';
+    $ret .= '</h' . $this->atts['hstart'] . '>';
     if (!empty($lecture['lecturers'])){
-        echo '<h' . ($this->atts['hstart'] + 1) . '>' . __('Lecturers', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
-		echo '<ul>';
+        $ret .= '<h' . ($this->atts['hstart'] + 1) . '>' . __('Lecturers', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
+		$ret .= '<ul>';
         foreach ($lecture['lecturers'] as $doz){
             $name = array();
             if (!empty($doz['title'])){
@@ -43,21 +43,21 @@ if ($lecture){
             }else{
                 $url = $fullname;
             }
-			echo '<li itemprop="provider" itemscope itemtype="http://schema.org/Person">' . $url . '</li>';
+			$ret .= '<li itemprop="provider" itemscope itemtype="http://schema.org/Person">' . $url . '</li>';
         }
-        echo '</ul>';
+        $ret .= '</ul>';
     }
-    echo '<h' . ($this->atts['hstart'] + 1) . '>' . __('Details', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
+    $ret .= '<h' . ($this->atts['hstart'] + 1) . '>' . __('Details', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
 
     if (!empty($lecture['angaben'])){
-        echo '<p>' . make_clickable($lecture['angaben']) . '</p>';
+        $ret .= '<p>' . make_clickable($lecture['angaben']) . '</p>';
     }
 
-    echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('Time and place', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+    $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('Time and place', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
     if (array_key_exists('comment', $lecture)){
-        echo '<p>' . make_clickable($lecture['comment']) . '</p>';
+        $ret .= '<p>' . make_clickable($lecture['comment']) . '</p>';
     }
-    echo '<ul>';
+    $ret .= '<ul>';
     if (isset($lecture['courses'])){
         foreach ($lecture['courses'] as $course){
             foreach ($course['term'] as $term){
@@ -118,17 +118,17 @@ if ($lecture){
                 }
                 $t['time'] .= ',';
                 $term_formatted = implode(' ', $t);
-                echo '<li>' . $term_formatted . '</li>';
+                $ret .= '<li>' . $term_formatted . '</li>';
             }
         }
     }else{
-        echo '<li>' . __('Time and place on appointment', 'rrze-campo') . '</li>';
+        $ret .= '<li>' . __('Time and place on appointment', 'rrze-campo') . '</li>';
     }
-    echo '</ul>';
+    $ret .= '</ul>';
 
     if (array_key_exists('studs', $lecture) && array_key_exists('stud', $lecture['studs'][0])){
-        echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('Fields of study', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
-        echo '<ul>';
+        $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('Fields of study', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+        $ret .= '<ul>';
         foreach ($lecture['studs'][0]['stud'] as $stud){
             $s = array();
             if (!empty($stud['pflicht'])){
@@ -141,61 +141,62 @@ if ($lecture){
                 $s['sem'] = sprintf('%s %d', __('from SEM', 'rrze-campo'), absint($stud['sem'][0]));
             }
             $studinfo = implode(' ', $s);
-            echo '<li>' . $studinfo . '</li>';
+            $ret .= '<li>' . $studinfo . '</li>';
         }
-        echo '</ul>';
+        $ret .= '</ul>';
     }
 
     if (!empty($lecture['organizational'])){
-        echo '<h4>' . __('Prerequisites / Organizational information', 'rrze-campo') . '</h4>';
-        echo '<p>' . $lecture['organizational'] . '</p>';
+        $ret .= '<h4>' . __('Prerequisites / Organizational information', 'rrze-campo') . '</h4>';
+        $ret .= '<p>' . $lecture['organizational'] . '</p>';
     }
     if (!empty($lecture['summary'])) {
-        echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('Content', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
-        echo '<p itemprop="description">' . make_clickable($lecture['summary']) . '</p>';
+        $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('Content', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+        $ret .= '<p itemprop="description">' . make_clickable($lecture['summary']) . '</p>';
     }
     if (!empty($lecture['literature'])) {
-        echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('Recommended Literature', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
-        echo '<p>' . make_clickable($lecture['literature']) . '</p>';
+        $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('Recommended Literature', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+        $ret .= '<p>' . make_clickable($lecture['literature']) . '</p>';
     }
     if (!empty($lecture['ects_infos'])) {
-        echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('ECTS information', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+        $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('ECTS information', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
         if (!empty($lecture['ects_name'])) {
-            echo '<h' . ($this->atts['hstart'] + 3) . '>' . __('Title', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
-            echo '<p>' . $lecture['ects_name'] . '</p>';
+            $ret .= '<h' . ($this->atts['hstart'] + 3) . '>' . __('Title', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
+            $ret .= '<p>' . $lecture['ects_name'] . '</p>';
         }
         if (!empty($lecture['ects_cred'])) {
-            echo '<h' . ($this->atts['hstart'] + 3) . '>' . __('Credits', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
-            echo '<p>' . $lecture['ects_cred'] . '</p>';
+            $ret .= '<h' . ($this->atts['hstart'] + 3) . '>' . __('Credits', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
+            $ret .= '<p>' . $lecture['ects_cred'] . '</p>';
         }
         if (!empty($lecture['ects_summary'])) {
-            echo '<h' . ($this->atts['hstart'] + 3) . '>' . __('Content', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
-            echo '<p>' . $lecture['ects_summary'] . '</p>';
+            $ret .= '<h' . ($this->atts['hstart'] + 3) . '>' . __('Content', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
+            $ret .= '<p>' . $lecture['ects_summary'] . '</p>';
         }
         if (!empty($lecture['ects_literature'])) {
-            echo '<h' . ($this->atts['hstart'] + 3) . '>' . __('Literature', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
-            echo '<p>' . $lecture['ects_literature'] . '</p>';
+            $ret .= '<h' . ($this->atts['hstart'] + 3) . '>' . __('Literature', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 3) . '>';
+            $ret .= '<p>' . $lecture['ects_literature'] . '</p>';
         }
     }
     if (!empty($lecture['keywords']) || !empty($lecture['maxturnout']) || !empty($lecture['url_description'])) {
-        echo '<h' . ($this->atts['hstart'] + 2) . '>' . __('Additional information', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
+        $ret .= '<h' . ($this->atts['hstart'] + 2) . '>' . __('Additional information', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 2) . '>';
         if (!empty($lecture['keywords'])) {
-            echo '<p>' . __('Keywords', 'rrze-campo') . ': ' . $lecture['keywords'] . '</p>';
+            $ret .= '<p>' . __('Keywords', 'rrze-campo') . ': ' . $lecture['keywords'] . '</p>';
         }
         if (!empty($lecture['maxturnout'])) {
-            echo '<p>' . __('Expected participants', 'rrze-campo') . ': ' . $lecture['maxturnout'] . '</p>';
+            $ret .= '<p>' . __('Expected participants', 'rrze-campo') . ': ' . $lecture['maxturnout'] . '</p>';
         }
         if (!empty($lecture['url_description'])) {
-            echo '<p>www: <a href="' . $lecture['url_description'] . '">' . $lecture['url_description'] . '</a></p>';
+            $ret .= '<p>www: <a href="' . $lecture['url_description'] . '">' . $lecture['url_description'] . '</a></p>';
         }
     }
 
-// echo '<div itemprop="provider" itemscope itemtype="https://schema.org/provider">';
-// echo '<span itemprop="name">FAU</span>';
-// echo '<span itemprop="url">https://www.fau.de</span>';
-// echo '</div>';
+// $ret .= '<div itemprop="provider" itemscope itemtype="https://schema.org/provider">';
+// $ret .= '<span itemprop="name">FAU</span>';
+// $ret .= '<span itemprop="url">https://www.fau.de</span>';
+// $ret .= '</div>';
 
-    echo '</div>'; // schema
-
+    $ret .= '</div>'; // schema
 }
-echo '</div>';
+$ret .= '</div>';
+
+echo $ret;
