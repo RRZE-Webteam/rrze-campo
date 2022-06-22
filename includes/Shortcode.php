@@ -124,7 +124,11 @@ class Shortcode
                 }
                 return $ret;
             }else{
-                $filename = trailingslashit(dirname(__FILE__)) . '../templates/' . $this->atts['task'] . '.php';
+                if (count($data) > 1){
+                    $filename = trailingslashit(dirname(__FILE__)) . '../templates/lectures-all.php';
+                }else{
+                    $filename = trailingslashit(dirname(__FILE__)) . '../templates/lectures-single.php';
+                }
 
                 if (is_file($filename)) {
                     ob_start();
