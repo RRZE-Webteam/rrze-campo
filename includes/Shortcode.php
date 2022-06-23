@@ -81,6 +81,26 @@ class Shortcode
 
         $this->atts = $this->normalize(shortcode_atts($atts_default, $atts));
 
+        // dynamically generate hide vars
+        $aHide = explode(',', str_replace(' ', '', $this->atts['hide']));
+        foreach($aHide as $val){
+            ${'hide_'.$val} = 1;
+        }
+
+        // set accordions' colors
+        $aAllowedColors = [
+            'med',
+            'nat',
+            'rw',
+            'phil',
+            'tk',
+        ];
+        
+        $this->atts['color'] = implode('', array_intersect($this->show, $aAllowedColors));
+        $this->atts['color_courses'] = explode('_', implode('', array_intersect($this->show, preg_filter('/$/', '_courses', $aAllowedColors))));
+        $this->atts['color_courses'] = $this->atts['color_courses'][0];
+        
+
         if (!empty($atts['nocache'])) {
             $this->noCache = true;
         }

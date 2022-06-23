@@ -1,17 +1,5 @@
 <?php 
 
-$aAllowedColors = [
-    'med',
-    'nat',
-    'rw',
-    'phil',
-    'tk',
-];
-
-$this->atts['color'] = implode('', array_intersect($this->show, $aAllowedColors));
-$this->atts['color_courses'] = explode('_', implode('', array_intersect($this->show, preg_filter('/$/', '_courses', $aAllowedColors))));
-$this->atts['color_courses'] = $this->atts['color_courses'][0];
-
 $ret = '<div class="rrze-campo">';
 if ($data){
     $lang = get_locale();
@@ -49,14 +37,14 @@ if ($data){
             }
             $ret .= $lecture['title'];
             $ret .= '</a></h' . ($this->atts['hstart'] + 1) . '>';
-            if (!empty($lecture['comment']) && !in_array('comment', $this->hide)) {
+            if (empty('hide_comment') && !empty($lecture['comment'])) {
                 $ret .= '<p>' . make_clickable($lecture['comment']) . '</p>';
             }
-            if (!empty($lecture['organizational']) && !in_array('organizational', $this->hide)) {
+            if (empty('hide_organizational') && !empty($lecture['organizational'])) {
                 $ret .= '<p>' . make_clickable($lecture['organizational']) . '</p>';
             }
 
-            if (!in_array('lecturers', $this->hide) && !empty($lecture['lecturers'])){
+            if (empty('hide_lecturers') && !empty($lecture['lecturers'])){
                 echo '<h' . ($this->atts['hstart'] + 1) . '>' . __('Lecturers', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
                 echo '<ul>';
                 foreach ($lecture['lecturers'] as $doz){
@@ -84,26 +72,26 @@ if ($data){
             $ret .= '<ul class="terminmeta">';
             $ret .= '<li>';
             $infos = '';
-            if (!empty($lecture['sws']) && !in_array('sws', $this->hide)) {
+            if (empty('hide_sws') && !empty($lecture['sws'])) {
                 $infos .= '<span>' . $lecture['sws'] . '</span>';
             }
-            if (!empty($lecture['maxturnout']) && !in_array('maxturnout', $this->hide)) {
+            if (empty('hide_maxturnout') && !empty($lecture['maxturnout'])) {
                 if (!empty($infos)) {$infos .= '; ';}
                 $infos .= '<span>' . __('Expected participants', 'rrze-campo') . ': ' . $lecture['maxturnout'] . '</span>';
             }
-            if (!empty($lecture['earlystudy']) && !in_array('earlystudy', $this->hide)) {
+            if (empty('hide_earlystudy') && !empty($lecture['earlystudy'])) {
                 if (!empty($infos)) {$infos .= '; ';}
                 $infos .= '<span>' . $lecture['earlystudy'] . '</span>';
             }
-            if (!empty($lecture['guest']) && !in_array('guest', $this->hide)) {
+            if (empty('hide_guest') && !empty($lecture['guest'])) {
                 if (!empty($infos)) {$infos .= '; ';}
                 $infos .= '<span>' . $lecture['guest'] . '</span>';
             }
-            if (!empty($lecture['cerificate']) && !in_array('cerificate', $this->hide)) {
+            if (empty('hide_cerificate') && !empty($lecture['cerificate'])) {
                 if (!empty($infos)) {$infos .= '; ';}
                 $infos .= '<span>' . $lecture['cerificate'] . '</span>';
             }
-            if (!empty($lecture['ects']) && !in_array('ects', $this->hide)) {
+            if (empty('hide_ects') && !empty($lecture['ects'])) {
                 if (!empty($infos)) {$infos .= '; ';}
                 $infos .= '<span>' . $lecture['ects'] . '</span>';
                 if (!empty($lecture['ects_cred'])) {
@@ -111,14 +99,14 @@ if ($data){
                 }
                 $infos .= '</span>';
             }
-            if (!empty($lecture['leclanguage_long']) && ($lecture['leclanguage_long'] != __('Lecture\'s language German', 'rrze-campo')) && !in_array('language', $this->hide)) {
+            if (empty('hide_language') && !empty($lecture['leclanguage_long']) && ($lecture['leclanguage_long'] != __('Lecture\'s language German', 'rrze-campo'))) {
                 if (!empty($infos)) {$infos .= ', ';}
                 $infos .= '<span>' . $lecture['leclanguage_long'] . '</span>';
             }
             $ret .= $infos . '</li>';
 
             $courseDates = '';
-            if (!in_array('courses', $this->hide)){
+            if (empty('hide_courses')){
                 if (in_array('accordion_courses', $this->show)){
                     if (in_array('accordion', $this->show)){
                         if (empty($courseDates)){
@@ -170,7 +158,7 @@ if ($data){
                                     $t['coursename'] = '(' . __('Course', 'rrze-campo') . ' ' . $course['coursename'] . ')';
                                 }
                                 // ICS
-                                if (in_array('ics', $this->show) && !in_array('ics', $this->hide)) {
+                                if (empty('hide_ics')) {
                                     $props = [
                                         'summary' => $lecture['title'],
                                         'startdate' => (!empty($term['startdate']) ? $term['startdate'] : null),

@@ -4,7 +4,7 @@
  * Plugin Name:     RRZE Campo
  * Plugin URI:      https://github.com/RRZE-Webteam/rrze-campo
  * Description:     Einbindung von Daten aus Campo
- * Version:         0.0.11
+ * Version:         0.0.12
  * Author:          RRZE-Webteam
  * Author URI:      https://blogs.fau.de/webworking/
  * License:         GNU General Public License v3
