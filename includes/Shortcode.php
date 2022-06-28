@@ -4,6 +4,8 @@ namespace RRZE\Campo;
 
 defined('ABSPATH') || exit;
 use function RRZE\Campo\Config\getShortcodeSettings;
+use function RRZE\Campo\Config\getConstants;
+
 
 /**
  * Shortcode
@@ -15,18 +17,13 @@ class Shortcode
      * @var string
      */
     protected $pluginFile;
-    // protected $CampoOrgNr;
-    // protected $CampoURL;
-    // protected $CampoLink;
     protected $options;
     protected $show = [];
     protected $hide = [];
     protected $atts;
     protected $campo;
-    protected $noCache = false;
-    const TRANSIENT_PREFIX = 'rrze_campo_cache_';
-    const TRANSIENT_EXPIRATION = DAY_IN_SECONDS;
     private $settings = '';
+    private $aAllowedColors = [];
 
     /**
      * Variablen Werte zuweisen.
@@ -35,11 +32,12 @@ class Shortcode
     public function __construct($pluginFile, $settings)
     {
         $this->pluginFile = $pluginFile;
-        // $this->settings = getShortcodeSettings();
+        $this->settings = getShortcodeSettings();
+        $this->settings = $this->settings['lectures'];
         $this->options = get_option('rrze-campo');
-        // $this->CampoOrgNr = (!empty($this->options['basic_CampoOrgNr']) ? $this->options['basic_CampoOrgNr'] : 0);
-        // $this->CampoURL = (!empty($this->options['basic_campo_url']) ? $this->options['basic_campo_url'] : 'https://campo.uni-erlangen.de');
-        // $this->CampoLink = sprintf('<a href="%1$s">%2$s</a>', $this->CampoURL, (!empty($this->options['basic_campo_linktxt']) ? $this->options['basic_campo_linktxt'] : __('Text zum Campo Link fehlt', 'rrze-campo')));
+        $constants = getConstants();
+        $this->aAllowedColors = $constants['colors'];
+
         add_action('admin_enqueue_scripts', [$this, 'enqueueGutenberg']);
         add_action('init', [$this, 'initGutenberg']);
         add_action('enqueue_block_assets', [$this, 'enqueueBlockAssets']);
@@ -53,7 +51,7 @@ class Shortcode
     public function onLoaded()
     {
         add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
-        add_shortcode('lectures', [$this, 'shortcodeLectures'], 10, 2);
+        add_shortcode('lectures', [$this, 'shortcodeLectures']);
     }
 
     public function enqueueScripts()
@@ -69,16 +67,18 @@ class Shortcode
      */
     public function shortcodeLectures($atts, $content = NULL)
     {
+        // show link to Campo only
+        if (in_array('link', $this->show)){
+            return sprintf('<a href="%1$s">%2$s</a>', $this->options['basic_url'], $this->options['basic_linkTxt']);
+        }
+
         // merge given attributes with default ones
-        $this->settings = getShortcodeSettings();
-        $this->settings = $this->settings['lectures'];
         $atts_default = array();
         foreach ($this->settings as $k => $v) {
             if ($k != 'block') {
                 $atts_default[$k] = $v['default'];
             }
         }
-
         $this->atts = $this->normalize(shortcode_atts($atts_default, $atts));
 
         // dynamically generate hide vars
@@ -88,28 +88,23 @@ class Shortcode
         }
 
         // set accordions' colors
-        $aAllowedColors = [
-            'med',
-            'nat',
-            'rw',
-            'phil',
-            'tk',
-        ];
-        
-        $this->atts['color'] = implode('', array_intersect($this->show, $aAllowedColors));
-        $this->atts['color_courses'] = explode('_', implode('', array_intersect($this->show, preg_filter('/$/', '_courses', $aAllowedColors))));
+        $this->atts['color'] = implode('', array_intersect($this->show, $this->aAllowedColors));
+        $this->atts['color_courses'] = explode('_', implode('', array_intersect($this->show, preg_filter('/$/', '_courses', $this->aAllowedColors))));
         $this->atts['color_courses'] = $this->atts['color_courses'][0];
-        
 
-        if (!empty($atts['nocache'])) {
-            $this->noCache = true;
+        // get data
+        $data = '';
+        if (in_array('cache', $this->hide)){
+            $data = Functions::getDataFromCache($this->atts);
         }
 
-        $data = '';
-        $this->campo = new CampoAPI($this->atts);
+        if (empty($data)){
+            $this->campo = new CampoAPI($this->atts);
+            $data = $this->campo->getResponse();
+            Functions::setDataToCache($data, $this->atts);
+        }
 
-        echo '<pre>';
-        var_dump($this->campo->getResponse());
+        var_dump($data);
         exit;
 
         if (!empty($this->atts['id'])){
@@ -124,10 +119,7 @@ class Shortcode
         }else{
             // all lectures
             if (empty($this->atts['campoID'])){
-                $campoOptions = get_option('rrze-campo');
-                if (!empty($campoOptions['basic_ApiKey'])){
-                    $this->atts['campoID'] = $campoOptions['basic_campoID'];
-                }
+                $this->atts['campoID'] = $this->options['basic_campoID'];
             }
             $data = $this->getData('lectureByCampoID', $this->atts['campoID']);
         }
@@ -437,23 +429,6 @@ class Shortcode
         );
     }
 
-    public function getData($dataType, $campoParam = null)
-    {
-        $sAtts = (!empty($this->atts) && is_array($this->atts) ? implode('-', $this->atts) : '');
-        if ($this->noCache) {
-            $data = $this->campo->getData($dataType, $campoParam);
-            set_transient(self::TRANSIENT_PREFIX . $dataType . $sAtts . $this->CampoOrgNr . $campoParam, $data, self::TRANSIENT_EXPIRATION);
-            return $data;
-        }
-        $data = get_transient(self::TRANSIENT_PREFIX . $dataType . $sAtts . $this->CampoOrgNr . $campoParam);
-        if ($data && $data != $this->atts['nodata']) {
-            return $data;
-        } else {
-            $data = $this->campo->getData($dataType, $campoParam);
-            set_transient(self::TRANSIENT_PREFIX . $dataType . $sAtts . $this->CampoOrgNr . $campoParam, $data, self::TRANSIENT_EXPIRATION);
-            return $data;
-        }
-    }
 
     public function addMCEButtons($pluginArray)
     {

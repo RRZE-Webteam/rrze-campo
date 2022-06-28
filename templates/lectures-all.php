@@ -45,8 +45,8 @@ if ($data){
             }
 
             if (empty('hide_lecturers') && !empty($lecture['lecturers'])){
-                echo '<h' . ($this->atts['hstart'] + 1) . '>' . __('Lecturers', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
-                echo '<ul>';
+                $ret .= '<h' . ($this->atts['hstart'] + 1) . '>' . __('Lecturers', 'rrze-campo') . '</h' . ($this->atts['hstart'] + 1) . '>';
+                $ret .= '<ul>';
                 foreach ($lecture['lecturers'] as $doz){
                     $name = array();
                     if (!empty($doz['title'])){

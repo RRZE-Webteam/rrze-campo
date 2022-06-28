@@ -38,6 +38,13 @@ function getConstants()
             "ru" => __('Russian', 'rrze-synonym'),
             "zh" => __('Chinese', 'rrze-synonym'),
         ],
+        'colors' => [
+            'med',
+            'nat',
+            'rw',
+            'phil',
+            'tk',
+        ],
     );
     return $options;
 }
@@ -81,7 +88,7 @@ function getFields()
     return [
         'basic' => [
             [
-                'name' => 'campo_url',
+                'name' => 'url',
                 'label' => __('Link to Campo', 'rrze-campo'),
                 'desc' => __('', 'rrze-campo'),
                 'placeholder' => __('', 'rrze-campo'),
@@ -90,7 +97,7 @@ function getFields()
                 'sanitize_callback' => 'sanitize_url',
             ],
             [
-                'name' => 'campo_linktxt',
+                'name' => 'linkTxt',
                 'label' => __('Text for the link to Campo', 'rrze-campo'),
                 'desc' => __('', 'rrze-campo'),
                 'placeholder' => __('', 'rrze-campo'),
@@ -108,68 +115,18 @@ function getFields()
                 'sanitize_callback' => 'sanitize_text_field',
             ],
             [
-                'name' => 'CampoID',
+                'name' => 'campoID',
                 'label' => __('Campo ID', 'rrze-campo'),
-                'desc' => __('', 'rrze-campo'),
+                'desc' => __('To receive lectures from another department use the attribute <strong>campoID</strong> in the shortcode. F.e. [lectures campoID="123"]', 'rrze-campo'),
                 'placeholder' => '',
                 'type' => 'text',
                 'default' => '',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
-            // [
-            //     'name' => 'semesterMin',
-            //     'label' => __('Find lectures starting with summer semester', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => '',
-            //     'min' => 0,
-            //     'max' => 99999999999,
-            //     'step' => '1',
-            //     'type' => 'number',
-            //     'default' => date("Y") - 1,
-            //     'sanitize_callback' => 'floatval',
-            // ],
-
-            // Semester Start/Ende-Datum muss von der API geliefert werden
-            // [
-            //     'name' => 'wsStart',
-            //     'label' => __('Beginn der Vorlesungszeit in diesem Wintersemester', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => '',
-            //     'type' => 'date',
-            //     'default' => date("Y") - 1 . '-11-02',
-            //     'sanitize_callback' => 'date',
-            // ],
-            // [
-            //     'name' => 'wsEnd',
-            //     'label' => __('Ende der Vorlesungszeit in diesem Wintersemester', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => '',
-            //     'type' => 'date',
-            //     'default' => date("Y") . '-02-12',
-            //     'sanitize_callback' => 'date',
-            // ],
-            // [
-            //     'name' => 'ssStart',
-            //     'label' => __('Beginn der Vorlesungszeit in diesem Sommersemester', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => '',
-            //     'type' => 'date',
-            //     'default' => date("Y") . '-04-12',
-            //     'sanitize_callback' => 'date',
-            // ],
-            // [
-            //     'name' => 'ssEnd',
-            //     'label' => __('Ende der Vorlesungszeit in diesem Sommersemester', 'rrze-campo'),
-            //     'desc' => __('', 'rrze-campo'),
-            //     'placeholder' => '',
-            //     'type' => 'date',
-            //     'default' => date("Y") . '-07-16',
-            //     'sanitize_callback' => 'date',
-            // ],
             [
                 'name' => 'hstart',
                 'label' => __('Headline\'s size', 'rrze-campo'),
-                'desc' => __('', 'rrze-campo'),
+                'desc' => __('Headlines start at this size.', 'rrze-campo'),
                 'min' => 2,
                 'max' => 10,
                 'step' => '1',
@@ -216,7 +173,7 @@ function getShortcodeSettings()
                 'label' => __('Person ID', 'rrze-campo'),
                 'type' => 'string',
             ],
-            'dozentid' => [
+            'lecturerID' => [
                 'default' => '',
                 'field_type' => 'text',
                 'label' => __('Lecturer ID', 'rrze-campo'),
@@ -246,14 +203,6 @@ function getShortcodeSettings()
                 'label' => __('Language', 'rrze-campo'),
                 'type' => 'string',
             ],
-            'number' => [
-                'default' => '',
-                'field_type' => 'text',
-                'label' => __('Campo OrgID', 'rrze-campo'),
-                'type' => 'string',
-            ],
-
-            // Fruehstudium und Gaststudium in show packen
             'show' => [
                 'default' => '',
                 'field_type' => 'text',
@@ -265,13 +214,6 @@ function getShortcodeSettings()
                 'field_type' => 'text',
                 'label' => __('Hide', 'rrze-campo'),
                 'type' => 'string',
-            ],
-            'ics' => [
-                'field_type' => 'toggle',
-                'label' => __('Show Calendar file', 'rrze-campo'),
-                'type' => 'boolean',
-                'default' => true,
-                'checked' => true,
             ],
             'hstart' => [
                 'default' => 2,
@@ -285,20 +227,6 @@ function getShortcodeSettings()
                 'label' => __('Show', 'rrze-campo'),
                 'type' => 'string',
             ],
-            // 'fruehstud' => [
-            //     'field_type' => 'toggle',
-            //     'label' => __('Show early study only', 'rrze-campo'),
-            //     'type' => 'boolean',
-            //     'default' => null,
-            //     'checked' => false,
-            // ],
-            // 'gast' => [
-            //     'field_type' => 'toggle',
-            //     'label' => __('Nur für Gaststudium geeignet anzeigen', 'rrze-campo'),
-            //     'type' => 'boolean',
-            //     'default' => null,
-            //     'checked' => false,
-            // ],
         ],
     ];
 }

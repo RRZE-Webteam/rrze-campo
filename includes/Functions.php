@@ -8,6 +8,9 @@ class Functions
 {
 
     protected $pluginFile;
+    const TRANSIENT_PREFIX = 'rrze_campo_cache_';
+    const TRANSIENT_EXPIRATION = DAY_IN_SECONDS;
+
 
     public function __construct($pluginFile)
     {
@@ -50,6 +53,15 @@ class Functions
         }
         $ret .= '</table>';
         return $ret;
+    }
+
+    public static function setDataToCache($data = '', $aAtts = []){
+        set_transient(self::TRANSIENT_PREFIX . implode('-', $aAtts), $data, self::TRANSIENT_EXPIRATION);
+    }
+
+    public static function getDataFromCache($aAtts = [])
+    {
+        return get_transient(self::TRANSIENT_PREFIX . implode('-', $aAtts));
     }
 
     public function ajaxGetCampoData()
