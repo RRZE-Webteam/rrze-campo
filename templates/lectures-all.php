@@ -178,7 +178,7 @@ if ($data){
                                     ];
 
                                     $screenReaderTxt = __('ICS', 'rrze-campo') . ': ' . __('Date', 'rrze-campo') . ' ' . (!empty($t['repeat']) ? $t['repeat'] : '') . ' ' . (!empty($t['date']) ? $t['date'] . ' ' : '') . $t['time'] . ' ' . __('import to calendar', 'rrze-campo');
-                                    $t['ics'] = '<span class="lecture-info-ics" itemprop="ics"><a href="' . plugin_dir_url(__DIR__) . 'ics.php?' . http_build_query($props) . '" aria-label="' . $screenReaderTxt . '">' . __('ICS', 'rrze-campo') . '</a></span>';
+                                    $t['ics'] = '<span class="lecture-info-ics" itemprop="ics"><a href="' . wp_nonce_url(plugin_dir_url(__DIR__) . 'ics.php?' . http_build_query($props), 'createICS', 'ics_nonce') . '" aria-label="' . $screenReaderTxt . '">' . __('ICS', 'rrze-campo') . '</a></span>';
                                 }
                                 $t['time'] .= ',';
                                 $term_formatted = implode(' ', $t);
