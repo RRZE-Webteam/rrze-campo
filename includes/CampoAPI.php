@@ -39,8 +39,8 @@ class CampoAPI
             return $campoOptions['basic_ApiKey'];
         }elseif(is_multisite()){
             $settingsOptions = get_site_option('rrze_settings');
-            if (!empty($settingsOptions->plugins->campo_apiKey)){
-                return $settingsOptions->plugins->campo_apiKey;
+            if (!empty($settingsOptions->plugins->dip_apiKey)){
+                return $settingsOptions->plugins->dip_apiKey;
             }
         }else{
             return '';
