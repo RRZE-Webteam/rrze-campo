@@ -24,23 +24,53 @@ class Functions
         add_action('wp_ajax_nopriv_GetCampoData', [$this, 'ajaxGetCampoData']);
         add_action('wp_ajax_GetCampoDataForBlockelements', [$this, 'ajaxGetCampoDataForBlockelements']);
         add_action('wp_ajax_nopriv_GetCampoDataForBlockelements', [$this, 'ajaxGetCampoDataForBlockelements']);
+        add_action('wp_ajax_GenerateICS', [$this, 'ajaxGenerateICS'] );
+        add_action('wp_ajax_nopriv_GenerateICS', [$this, 'ajaxGenerateICS']);
     }
 
-    // public function adminEnqueueScripts()
-    // {
-        // wp_enqueue_script(
-        //     'rrze-unvis-ajax',
-        //     plugins_url('js/rrze-campo.js', plugin_basename($this->pluginFile)),
-        //     ['jquery'],
-        //     null
-        // );
+    public function ajaxGenerateICS(){
+        check_ajax_referer('campo-ajax-ics-nonce', 'ics_nonce');
+        $inputs = filter_input(INPUT_GET, 'data', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+        $aProps = json_decode(openssl_decrypt(base64_decode($inputs['v']), 'AES-256-CBC', hash('sha256', AUTH_KEY), 0, substr(hash('sha256', AUTH_SALT), 0, 16)), true);
 
-        // wp_localize_script('rrze-unvis-ajax', 'campo_ajax', [
-        //     'ajax_url' => admin_url('admin-ajax.php'),
-        //     'nonce' => wp_create_nonce('campo-ajax-nonce'),
-        // ]);
+        $ics = new ICS($aProps);
+        $response = [
+            'icsData' => $ics->toString(),
+            'filename' => sanitize_file_name($aProps['FILENAME'] . '.ics')
+        ];
 
-    // }
+        wp_send_json($response);
+    }
+
+    public function enqueueScripts(){
+        wp_enqueue_script(
+            'rrze-campo-ajax-frontend',
+            plugins_url('js/rrze-campo-frontend.js', plugin_basename($this->pluginFile)),
+            ['jquery'],
+            null
+        );
+
+        wp_localize_script('rrze-campo-ajax-frontend', 'campo_ajax', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'ics_nonce' => wp_create_nonce('campo-ajax-ics-nonce'),
+        ]);
+    }
+
+    public function adminEnqueueScripts()
+    {
+        wp_enqueue_script(
+            'rrze-campo-ajax',
+            plugins_url('js/rrze-campo.js', plugin_basename($this->pluginFile)),
+            ['jquery'],
+            null
+        );
+
+        wp_localize_script('rrze-campo-ajax', 'campo_ajax', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('campo-ajax-nonce'),
+        ]);
+    }
+
 
     public function getTableHTML($aIn)
     {
@@ -181,7 +211,7 @@ class Functions
                 $sem = 'ws';
             }
 
-            $options = get_option('rrze-univis');
+            $options = get_option('rrze-campo');
             $semStart = (!empty($options['basic_' . $sem . 'Start']) ? $options['basic_' . $sem . 'Start'] : null);
             $semEnd = (!empty($options['basic_' . $sem . 'End']) ? $options['basic_' . $sem . 'End'] : null);
 
@@ -285,13 +315,10 @@ class Functions
             'h' => hash('sha256', $propsEncoded),
         ];
 
-        $screenReaderTxt = __('ICS', 'rrze-univis') . ': ' . __('Date', 'rrze-univis') . ' ' . (!empty($t['repeat']) ? $t['repeat'] : '') . ' ' . (!empty($t['date']) ? $t['date'] . ' ' : '') . $t['time'] . ' ' . __('import to calendar', 'rrze-univis');
-
         return [
-            'link' => wp_nonce_url(plugin_dir_url(__DIR__) . 'ics.php?' . http_build_query($linkParams), 'createICS', 'ics_nonce'),
-            'linkTxt' => __('ICS', 'rrze-univis') . ': ' . __('Date', 'rrze-univis') . ' ' . (!empty($t['repeat']) ? $t['repeat'] : '') . ' ' . (!empty($t['date']) ? $t['date'] . ' ' : '') . $t['time'] . ' ' . __('import to calendar', 'rrze-univis'),
+            'link' => http_build_query($linkParams),
+            'linkTxt' => __('ICS', 'rrze-campo') . ': ' . __('Date', 'rrze-campo') . ' ' . (!empty($t['repeat']) ? $t['repeat'] : '') . ' ' . (!empty($t['date']) ? $t['date'] . ' ' : '') . $t['time'] . ' ' . __('import to calendar', 'rrze-campo'),
         ];
     }
-
 
 }

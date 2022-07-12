@@ -1,5 +1,7 @@
 <?php 
 
+namespace RRZE\Campo;
+
 $ret = '<div class="rrze-campo">';
 
 if ($lecture){
